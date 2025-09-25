@@ -12,5 +12,6 @@ export default [
   {
     path: '**',
     redirectTo: 'log-in'
-  }
+  },
+
 ] as Routes;

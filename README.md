@@ -7,4 +7,6 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 ```bash
 bun add tailwindcss @tailwindcss/postcss postcss --force;
 bun add -D daisyui@latest;
+bun add --dev --exact prettier;
+bun add @supabase/supabase-js;
 ```

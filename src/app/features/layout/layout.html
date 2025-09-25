@@ -1,0 +1,88 @@
+<div class="drawer lg:drawer-open min-h-screen">
+  <input id="erp-drawer" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <!-- Navbar -->
+    <div class="w-full navbar bg-base-200 lg:hidden">
+      <div class="flex-none">
+        <label for="erp-drawer" class="btn btn-square btn-ghost drawer-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </label>
+      </div>
+      <div class="flex-1 px-2 text-xl font-bold">ERP</div>
+    </div>
+    <!-- Main content -->
+    <div class="p-4 flex-1">
+      <ng-content></ng-content>
+    </div>
+  </div>
+  <div class="drawer-side">
+    <label for="erp-drawer" class="drawer-overlay"></label>
+    <aside class="menu p-4 w-48 min-h-full bg-gray-200 text-base-content">
+      <h2 class="menu-title mb-2">Menú</h2>
+      <nav aria-label="ERP navigation">
+        <ul>
+          <li>
+            <a
+              [class.menu-active]="activeMenu() === 'Dashboard'"
+              (click)="setActiveMenuLink('Dashboard')"
+              ><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M14 9q-.425 0-.712-.288T13 8V4q0-.425.288-.712T14 3h6q.425 0 .713.288T21 4v4q0 .425-.288.713T20 9zM4 13q-.425 0-.712-.288T3 12V4q0-.425.288-.712T4 3h6q.425 0 .713.288T11 4v8q0 .425-.288.713T10 13zm10 8q-.425 0-.712-.288T13 20v-8q0-.425.288-.712T14 11h6q.425 0 .713.288T21 12v8q0 .425-.288.713T20 21zM4 21q-.425 0-.712-.288T3 20v-4q0-.425.288-.712T4 15h6q.425 0 .713.288T11 16v4q0 .425-.288.713T10 21z"
+                /></svg
+              >Dashboard</a
+            >
+          </li>
+          <li>
+            <a
+              [class.menu-active]="activeMenu() === 'Clientes'"
+              (click)="setActiveMenuLink('Clientes')"
+              >Clientes</a
+            >
+          </li>
+          <li>
+            <a
+              [class.menu-active]="activeMenu() === 'Facturación'"
+              (click)="setActiveMenuLink('Facturación')"
+              >Facturación</a
+            >
+          </li>
+          <li>
+            <a
+              [class.menu-active]="activeMenu() === 'Inventario'"
+              (click)="setActiveMenuLink('Inventario')"
+              >Inventario</a
+            >
+          </li>
+          <li>
+            <a
+              [class.menu-active]="activeMenu() === 'Reportes'"
+              (click)="setActiveMenuLink('Reportes')"
+              >Reportes</a
+            >
+          </li>
+          <li>
+            <a
+              [class.menu-active]="activeMenu() === 'Configuración'"
+              (click)="setActiveMenuLink('Configuración')"
+              >Configuración</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+</div>
