@@ -1,12 +1,44 @@
 {
   "name": "zentoner",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Una aplicación para gestionar y organizar el negocio de impresión laser.",
+  "author": "Gerson Jean Pierre",
+  "main": "electron/main.js",
+  "build": {
+    "appId": "com.example.zentoner",
+    "productName": "ZenToner",
+    "buildDependenciesFromSource": false,
+    "nodeGypRebuild": false,
+    "files": [
+      "dist/zentoner/**/*",
+      "electron/main.js",
+      "electron/preload.js",
+      "node_modules/**/*",
+      "!node_modules/@tailwindcss/oxide-*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron": "ng build --base-href ./ && electron .",
+    "package": "electron-builder"
   },
   "prettier": {
     "printWidth": 100,
@@ -40,7 +72,9 @@
     "@angular/cli": "^20.3.3",
     "@angular/compiler-cli": "^20.3.2",
     "@types/jasmine": "~5.1.9",
-    "daisyui": "^5.1.20",
+    "daisyui": "^5.1.24",
+    "electron": "^38.1.2",
+    "electron-builder": "^26.0.12",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",

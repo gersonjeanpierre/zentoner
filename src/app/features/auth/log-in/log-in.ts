@@ -40,8 +40,7 @@ export default class LogIn {
         password: this.logInForm.value.password ?? ''
       });
 
-      console.log(data);
-      this.router.navigateByUrl('/clientes');
+      this.router.navigateByUrl('/layout');
 
     } catch (error) {
       console.error({ error });
