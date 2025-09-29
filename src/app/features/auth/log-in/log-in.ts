@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LogoLaserVeloz } from '@shared/components/logo-laser-veloz/logo-laser-veloz';
 import { AuthService } from '../auth-service';
-import { SignUpForm as LogInForm } from '@core/auth/sign-up.interface';
+import { SignUpForm as LogInForm } from '@core/auth/sign-up-model';
 
 @Component({
   selector: 'app-log-in',
@@ -40,7 +40,7 @@ export default class LogIn {
         password: this.logInForm.value.password ?? ''
       });
 
-      this.router.navigateByUrl('/layout');
+      this.router.navigateByUrl('/');
 
     } catch (error) {
       console.error({ error });

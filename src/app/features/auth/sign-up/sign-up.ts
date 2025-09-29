@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { LogoLaserVeloz } from '../../../shared/components/logo-laser-veloz/logo-laser-veloz';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SignUpForm } from '@core/auth/sign-up.interface';
+import { SignUpForm } from '@core/auth/sign-up-model';
 import { AuthService } from '../auth-service';
 
 @Component({

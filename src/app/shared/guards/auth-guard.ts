@@ -23,7 +23,7 @@ export const authRedirectGuard: CanActivateFn = async (route, state) => {
   const { data } = await authService.getSession();
 
   if (data.session) {
-    router.navigateByUrl('/layout');
+    router.navigateByUrl('/');
   }
   return !data.session;
 };

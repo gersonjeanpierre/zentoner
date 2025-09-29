@@ -9,14 +9,19 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes')
   },
   {
-    path: 'clientes',
+    path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/clients/clients')
-  },
-  {
-    path: 'layout',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/layout/layout')
+    loadComponent: () => import('@features/layout/layout'),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('@features/dashboard/dashboard')
+      },
+      {
+        path: 'clientes',
+        loadComponent: () => import('@features/clients/clients')
+      }
+    ]
   },
   {
     path: '**',
