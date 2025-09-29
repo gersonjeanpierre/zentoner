@@ -6,12 +6,6 @@
 /out-tsc
 /bazel-out
 
-#lock files
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-bun.lock
-
 # environment files
 /src/environments/environment*.ts
 

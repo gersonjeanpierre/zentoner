@@ -1,0 +1,68 @@
+<div class="p-4 max-w-xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Editar Cliente</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="flex gap-2">
+      <select class="select select-bordered w-full" formControlName="typePerson">
+        <option value="">Tipo de persona</option>
+        <option value="NATURAL">Natural</option>
+        <option value="JURIDICA">Jurídica</option>
+      </select>
+      <select class="select select-bordered w-full" formControlName="typeClient">
+        <option value="">Tipo de cliente</option>
+        <option value="REGULAR">Regular</option>
+        <option value="VIP">VIP</option>
+      </select>
+    </div>
+    <input
+      class="input input-bordered w-full"
+      formControlName="fullName"
+      placeholder="Nombre completo"
+      required
+    />
+    <input
+      class="input input-bordered w-full"
+      formControlName="socialReason"
+      placeholder="Razón social"
+    />
+    <input
+      class="input input-bordered w-full"
+      formControlName="phone"
+      placeholder="Teléfono"
+      required
+    />
+    <input class="input input-bordered w-full" formControlName="dni" placeholder="DNI" />
+    <input class="input input-bordered w-full" formControlName="ruc" placeholder="RUC" />
+    <input
+      class="input input-bordered w-full"
+      formControlName="ce"
+      placeholder="Carnet extranjería"
+    />
+    <input
+      class="input input-bordered w-full"
+      formControlName="email"
+      placeholder="Email"
+      type="email"
+    />
+    <label class="flex items-center gap-2">
+      <input type="checkbox" class="checkbox" formControlName="isActive" />
+      Activo
+    </label>
+    <button class="btn btn-primary w-full" type="submit" [disabled]="loading()">
+      Guardar cambios
+    </button>
+    <button
+      class="btn btn-error w-full"
+      type="button"
+      (click)="onDelete()"
+      [disabled]="deleting() || loading()"
+    >
+      Eliminar cliente
+    </button>
+    <div *ngIf="error()" class="alert alert-error mt-2">{{ error() }}</div>
+    <div *ngIf="success()" class="alert alert-success mt-2">Cliente actualizado correctamente</div>
+    <div *ngIf="deleteError()" class="alert alert-error mt-2">{{ deleteError() }}</div>
+    <div *ngIf="deleteSuccess()" class="alert alert-success mt-2">
+      Cliente eliminado correctamente
+    </div>
+  </form>
+</div>

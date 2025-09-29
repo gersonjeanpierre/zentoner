@@ -1,0 +1,84 @@
+<div class="p-4">
+  <h2 class="text-2xl font-bold mb-4">Listado de Clientes</h2>
+  <div *ngIf="loading()" class="flex justify-center items-center h-32">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+  <div *ngIf="error()" class="alert alert-error mb-4">{{ error() }}</div>
+  <div *ngIf="!loading() && !error()">
+    <div class="flex justify-end mb-2">
+      <a class="btn btn-primary" [routerLink]="['/clientes/create']">Nuevo Cliente</a>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <input
+        class="input input-bordered w-full max-w-xs"
+        type="text"
+        placeholder="Buscar por nombre, teléfono o email"
+        [(ngModel)]="searchValue"
+        (ngModelChange)="onSearchChange($event)"
+      />
+      <div class="join">
+        <button
+          class="btn btn-sm join-item"
+          [class.btn-active]="filter() === 'all'"
+          (click)="filter.set('all')"
+        >
+          Todos
+        </button>
+        <button
+          class="btn btn-sm join-item"
+          [class.btn-active]="filter() === 'active'"
+          (click)="filter.set('active')"
+        >
+          Activos
+        </button>
+        <button
+          class="btn btn-sm join-item"
+          [class.btn-active]="filter() === 'inactive'"
+          (click)="filter.set('inactive')"
+        >
+          Inactivos
+        </button>
+      </div>
+    </div>
+    <div *ngIf="deleteSuccess()" class="alert alert-success mb-2">
+      Cliente eliminado correctamente
+    </div>
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of filteredCustomers()">
+            <td>{{ c.fullName }}</td>
+            <td>{{ c.typeClient }}</td>
+            <td>{{ c.phone }}</td>
+            <td>{{ c.email }}</td>
+            <td>
+              <span class="badge" [ngClass]="c.isActive ? 'badge-success' : 'badge-error'">
+                {{ c.isActive ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="flex gap-2">
+              <a class="btn btn-xs btn-primary" [routerLink]="['/customers/edit', c.id]">Editar</a>
+              <button
+                class="btn btn-xs btn-error"
+                (click)="deleteCustomer(c.id)"
+                [disabled]="!c.isActive"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
