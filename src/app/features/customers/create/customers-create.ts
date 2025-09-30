@@ -53,7 +53,7 @@ export default class CustomersCreate {
       console.log('Cliente creado:', result);
       this.success.set(true);
       this.form.reset({ isActive: true });
-      setTimeout(() => this.router.navigate(['/customers']), 1200);
+      setTimeout(() => this.router.navigate(['/clientes']), 800);
     } catch (e: any) {
       console.error('Error al crear cliente', e);
       this.error.set(e.message || 'Error al crear cliente');

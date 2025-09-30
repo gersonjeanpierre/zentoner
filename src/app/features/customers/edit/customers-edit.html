@@ -9,8 +9,10 @@
       </select>
       <select class="select select-bordered w-full" formControlName="typeClient">
         <option value="">Tipo de cliente</option>
-        <option value="REGULAR">Regular</option>
-        <option value="VIP">VIP</option>
+        <option value="NUEVO">Nuevo</option>
+        <option value="FRECUENTE">Frecuente</option>
+        <option value="IMPRENTERO_NUEVO">Imprentero Nuevo</option>
+        <option value="IMPRENTERO_FRECUENTE">Imprentero Frecuente</option>
       </select>
     </div>
     <input
@@ -58,11 +60,17 @@
     >
       Eliminar cliente
     </button>
-    <div *ngIf="error()" class="alert alert-error mt-2">{{ error() }}</div>
-    <div *ngIf="success()" class="alert alert-success mt-2">Cliente actualizado correctamente</div>
-    <div *ngIf="deleteError()" class="alert alert-error mt-2">{{ deleteError() }}</div>
-    <div *ngIf="deleteSuccess()" class="alert alert-success mt-2">
-      Cliente eliminado correctamente
-    </div>
+    @if (error()) {
+      <div class="alert alert-error mt-2">{{ error() }}</div>
+    }
+    @if (success()) {
+      <div class="alert alert-success mt-2">Cliente actualizado correctamente</div>
+    }
+    @if (deleteError()) {
+      <div class="alert alert-error mt-2">{{ deleteError() }}</div>
+    }
+    @if (deleteSuccess()) {
+      <div class="alert alert-success mt-2">Cliente eliminado correctamente</div>
+    }
   </form>
 </div>
