@@ -38,7 +38,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
-    "package": "electron-builder"
+    "package": "electron-builder",
+    "preview": "vite preview"
   },
   "prettier": {
     "printWidth": 100,
@@ -56,6 +57,7 @@
   "dependencies": {
     "@angular/common": "^20.3.2",
     "@angular/compiler": "^20.3.2",
+    "preview": "vite preview",
     "@angular/core": "^20.3.2",
     "@angular/forms": "^20.3.2",
     "@angular/platform-browser": "^20.3.2",
@@ -69,6 +71,7 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^1.21.1",
     "@angular/build": "^20.3.3",
     "@angular/cli": "^20.3.3",
     "@angular/compiler-cli": "^20.3.2",
