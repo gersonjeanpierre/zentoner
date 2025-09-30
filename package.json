@@ -38,7 +38,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
-    "package": "electron-builder"
+    "package": "electron-builder",
+    "deploy:cf": "node generate-env.js && npm run build"
   },
   "prettier": {
     "printWidth": 100,
