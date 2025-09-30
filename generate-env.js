@@ -4,13 +4,11 @@ const fs = require('fs');
 const path = require('path');
 
 // Las variables de entorno de Cloudflare se exponen a este proceso
-const SUPABASE_URL = process.env.CF_SUPABASE_URL;
-const SUPABASE_KEY = process.env.CF_SUPABASE_KEY;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error(
-    'FATAL: CF_SUPABASE_URL o CF_SUPABASE_KEY no están definidas en el entorno de build.',
-  );
+  console.error('FATAL: SUPABASE_URL o SUPABASE_KEY no están definidas en el entorno de build.');
   process.exit(1); // Falla el script si las variables no están
 }
 
