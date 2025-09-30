@@ -57,7 +57,6 @@
   "dependencies": {
     "@angular/common": "^20.3.2",
     "@angular/compiler": "^20.3.2",
-    "preview": "vite preview",
     "@angular/core": "^20.3.2",
     "@angular/forms": "^20.3.2",
     "@angular/platform-browser": "^20.3.2",
