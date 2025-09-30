@@ -23,6 +23,17 @@
       </div>
       <div class="flex-1 px-2 text-xl font-bold">ERP</div>
     </div>
+    <!-- Usuario y sesión activa -->
+    <div class="flex items-center gap-4 p-2 bg-base-100 border-b border-base-200">
+      <div *ngIf="user()" class="flex items-center gap-2">
+        <span class="font-semibold">Usuario:</span>
+        <span class="badge badge-neutral">{{ user().email }}</span>
+      </div>
+      <div *ngIf="session()" class="flex items-center gap-2">
+        <span class="font-semibold">Sesión activa:</span>
+        <span class="badge badge-success">{{ session() }}</span>
+      </div>
+    </div>
     <!-- Main content -->
     <div class="p-4 flex-1">
       <router-outlet></router-outlet>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '@features/auth/auth-service';
 import { LogoLaserVeloz } from '@shared/components/logo-laser-veloz/logo-laser-veloz';
@@ -10,10 +10,12 @@ import { CommonModule } from '@angular/common';
   templateUrl: './layout.html',
   styleUrl: './layout.css'
 })
-export default class Layout {
+export default class Layout implements OnInit {
 
   private authService = inject(AuthService);
   private router = inject(Router);
+  user = signal<any | null>(null);
+  session = signal<any | null>(null);
 
   activeMenu = signal('Dashboard');
   fontSize = signal('1.2em');
@@ -55,6 +57,19 @@ export default class Layout {
       routeLink: '/auth/log-in'
     }
   ]
+
+  async ngOnInit() {
+    // Obtener usuario y sesión activa de Supabase
+    try {
+      const userRes = await this.authService.getUser();
+      this.user.set(userRes.data?.user || null);
+      const sessionRes = await this.authService.getSession();
+      this.session.set(sessionRes.data.session?.user.role || null);
+    } catch (e) {
+      this.user.set(null);
+      this.session.set(null);
+    }
+  }
 
   logOut() {
     this.activeMenu.set('Cerrar sesión');
