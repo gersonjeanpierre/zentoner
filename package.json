@@ -38,8 +38,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
-    "package": "electron-builder",
-    "preview": "vite preview"
+    "package": "electron-builder"
   },
   "prettier": {
     "printWidth": 100,
@@ -70,11 +69,10 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^1.21.1",
     "@angular/build": "^20.3.3",
     "@angular/cli": "^20.3.3",
     "@angular/compiler-cli": "^20.3.2",
-    "@iconify/json": "^2.2.389",
+    "@iconify/json": "^2.2.390",
     "@iconify/tailwind4": "^1.0.6",
     "@types/jasmine": "~5.1.9",
     "daisyui": "^5.1.25",

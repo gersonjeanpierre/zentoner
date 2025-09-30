@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '@env/environment';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable({
@@ -9,9 +10,12 @@ export class SupabaseService {
   supabaseClient: SupabaseClient;
 
   constructor() {
+    if (!environment.SUPABASE_URL || !environment.SUPABASE_KEY) {
+      throw new Error('Las claves de Supabase no están definidas en las variables de entorno.');
+    }
     this.supabaseClient = createClient(
-      import.meta.env.SUPABASE_URL,
-      import.meta.env.SUPABASE_KEY
-    );
+      environment.SUPABASE_URL,
+      environment.SUPABASE_KEY
+    )
   }
 }
