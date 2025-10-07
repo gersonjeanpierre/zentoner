@@ -26,6 +26,10 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'tickets',
+        loadComponent: () => import('@features/tickets/tickets')
+      },
+      {
         path: '**',
         redirectTo: 'dashboard'
       }

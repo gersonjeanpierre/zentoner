@@ -47,6 +47,11 @@ export default class Layout implements OnInit {
       routeLink: '/reportes'
     },
     {
+      name: 'Tickets',
+      icon: 'icon-[fa6-solid--ticket]',
+      routeLink: '/tickets'
+    },
+    {
       name: 'Configuración',
       icon: 'icon-[fa6-solid--gear]',
       routeLink: '/configuracion'
