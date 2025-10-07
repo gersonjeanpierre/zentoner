@@ -54,7 +54,7 @@ export default class Tickets {
 
     const link = doc.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/styles.css';
+    link.href = 'styles.css';
     doc.head.appendChild(link);
 
     const style = doc.createElement('style');
