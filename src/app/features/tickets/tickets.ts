@@ -31,9 +31,9 @@ interface TicketData {
 })
 export default class Tickets {
   ticketData: TicketData = {
-    companyName: 'Laser Color Veloz',
-    designer: 'Juan Pérez',
-    client: 'María García',
+    companyName: 'LASER COLOR VELOZ',
+    designer: 'GERSON SALAS',
+    client: 'ROCKY BALBOA',
     creationDate: new Date(),
     saleDetails: [
       { description: 'Diseño Logo', quantity: 1, price: 150.00, total: 150.00 },
@@ -65,7 +65,7 @@ export default class Tickets {
           <style>
             @media print {
               @page {
-                size: 75mm auto;
+                size: 76mm auto;
                 margin: 0;
               }
               body {
@@ -74,10 +74,9 @@ export default class Tickets {
               }
             }
             body {
-              font-family: 'Courier New', 'Lucida Console', 'Monaco', monospace;
-              font-size: 11px;
-              line-height: 1.3;
-              width: 75mm;
+              font-family: 'JetBrainsNFMono', monospace;
+              font-size: 14px;
+              line-height: 1.5;
               margin: 0 auto;
               padding: 3mm 4mm;
               box-sizing: border-box;
@@ -108,14 +107,14 @@ export default class Tickets {
             }
             .total {
               font-weight: bold;
-              font-size: 11px;
+              font-size: 12px;
               border-top: 1px solid #000;
               padding-top: 4px;
               margin-top: 4px;
             }
             .footer {
               margin-top: 8px;
-              font-size: 9px;
+              font-size: 12px;
             }
           </style>
         </head>
