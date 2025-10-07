@@ -1,0 +1,179 @@
+<div class="tickets-container">
+  <!-- Formulario de inputs -->
+  <div class="form-section">
+    <h2>Generar Ticket</h2>
+
+    <div class="form-group">
+      <label>Diseñador:</label>
+      <input
+        type="text"
+        [(ngModel)]="ticketData.designer"
+        (input)="updateDesigner($event.target.value)"
+        class="form-input"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Cliente:</label>
+      <input type="text" [(ngModel)]="ticketData.client" class="form-input" />
+    </div>
+
+    <div class="form-group">
+      <label>Fecha de Creación:</label>
+      <input
+        type="datetime-local"
+        [value]="ticketData.creationDate.toISOString().slice(0, 16)"
+        (input)="updateCreationDate($event.target.value)"
+        class="form-input"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Detalle de Venta:</label>
+      <div class="sale-items">
+        <div class="sale-item" *ngFor="let item of ticketData.saleDetails; let i = index">
+          <input
+            type="text"
+            placeholder="Descripción"
+            [value]="item.description"
+            (input)="updateSaleItem(i, 'description', $event.target.value)"
+            class="form-input description-input"
+          />
+          <input
+            type="number"
+            placeholder="Cant."
+            [value]="item.quantity"
+            (input)="updateSaleItem(i, 'quantity', $event.target.value)"
+            class="form-input qty-input"
+            min="1"
+          />
+          <input
+            type="number"
+            placeholder="Precio"
+            [value]="item.price"
+            (input)="updateSaleItem(i, 'price', $event.target.value)"
+            class="form-input price-input"
+            step="0.01"
+            min="0"
+          />
+          <span class="total-display">S/ {{ item.total.toFixed(2) }}</span>
+          <button (click)="removeSaleItem(i)" class="remove-btn">×</button>
+        </div>
+      </div>
+      <button (click)="addSaleItem()" class="add-item-btn">+ Agregar Item</button>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Adelanto:</label>
+        <input
+          type="number"
+          [(ngModel)]="ticketData.advance"
+          (ngModelChange)="updateAdvance($event)"
+          class="form-input"
+          step="0.01"
+          min="0"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Descuento:</label>
+        <input
+          type="number"
+          [(ngModel)]="ticketData.discount"
+          (ngModelChange)="updateDiscount($event)"
+          class="form-input"
+          step="0.01"
+          min="0"
+        />
+      </div>
+    </div>
+
+    <div class="totals-section">
+      <div class="total-row">
+        <span>Precio Total:</span>
+        <span>S/ {{ ticketData.totalPrice.toFixed(2) }}</span>
+      </div>
+      <div class="total-row">
+        <span>IGV (18%):</span>
+        <span>S/ {{ ticketData.igv.toFixed(2) }}</span>
+      </div>
+      <div class="total-row final">
+        <span>Monto Final:</span>
+        <span>S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="print-btn" (click)="printTicket()">Imprimir Ticket</button>
+    </div>
+  </div>
+
+  <!-- Vista previa del ticket -->
+  <div class="ticket-preview">
+    <div class="ticket">
+      <div class="header">{{ ticketData.companyName }}</div>
+      <div class="divider"></div>
+
+      <div class="row">
+        <span class="label">Diseñador:</span>
+        <span>{{ ticketData.designer || 'N/A' }}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">Cliente:</span>
+        <span>{{ ticketData.client || 'N/A' }}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">Fecha Creación:</span>
+        <span>{{ formatDate(ticketData.creationDate) }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="label">Detalle de Venta:</div>
+      <div class="sale-details" *ngFor="let item of ticketData.saleDetails">
+        <div class="row">
+          <span>{{ item.description }}</span>
+          <span>x{{ item.quantity }}</span>
+        </div>
+        <div class="row">
+          <span>S/ {{ item.price.toFixed(2) }}</span>
+          <span>S/ {{ item.total.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <span class="label">Precio Total:</span>
+        <span>S/ {{ ticketData.totalPrice.toFixed(2) }}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">Adelanto:</span>
+        <span>S/ {{ ticketData.advance.toFixed(2) }}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">Descuento:</span>
+        <span>S/ {{ ticketData.discount.toFixed(2) }}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">IGV (18%):</span>
+        <span>S/ {{ ticketData.igv.toFixed(2) }}</span>
+      </div>
+
+      <div class="row total">
+        <span>Monto Final:</span>
+        <span>S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="footer">Fecha de Impresión: {{ formatDate(ticketData.printDate) }}</div>
+    </div>
+  </div>
+</div>
