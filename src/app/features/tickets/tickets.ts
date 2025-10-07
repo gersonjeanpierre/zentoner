@@ -55,7 +55,7 @@ export default class Tickets {
     // Update print date
     this.ticketData.printDate = new Date();
 
-    const printWindow = window.open('', '_blank', 'width=400,height=600');
+    const printWindow = window.open('', '_blank', 'width=300,height=600');
     if (printWindow) {
       printWindow.document.write(`
         <!DOCTYPE html>
@@ -100,7 +100,7 @@ export default class Tickets {
               display: flex;
               justify-content: space-between;
               margin: 2px 0;
-              font-size: 10px;
+              font-size: 12px;
             }
             .label {
               font-weight: bold;
