@@ -1,39 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TicketData, TicketItem } from '@core/tickets';
+import { TicketPreview } from './ticket-preview/ticket-preview';
 
-interface TicketItem {
-  description: string;
-  quantity: number;
-  price: number;
-  total: number;
-}
 
-interface TicketData {
-  companyName: string;
-  designer: string;
-  client: string;
-  creationDate: Date;
-  saleDetails: TicketItem[];
-  totalPrice: number;
-  advance: number;
-  discount: number;
-  igv: number;
-  finalAmount: number;
-  printDate: Date;
-}
 
 @Component({
   selector: 'app-tickets',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TicketPreview],
   templateUrl: './tickets.html',
   styleUrl: './tickets.css'
 })
 export default class Tickets {
+
+
   ticketData: TicketData = {
-    companyName: 'LASER COLOR VELOZ',
-    designer: 'GERSON SALAS',
+    companyName: '<-- LASER COLOR VELOZ -->',
     client: 'ROCKY BALBOA',
+    designer: 'GERSON SALAS',
     creationDate: new Date(),
     saleDetails: [
       { description: 'Diseño Logo', quantity: 1, price: 150.00, total: 150.00 },
@@ -52,149 +37,39 @@ export default class Tickets {
   }
 
   printTicket(): void {
-    // Update print date
     this.ticketData.printDate = new Date();
+    const preview = document.querySelector('.ticket-preview');
+    if (!preview) return;
 
     const printWindow = window.open('', '_blank', 'width=300,height=600');
-    if (printWindow) {
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Ticket - ${this.ticketData.companyName}</title>
-          <style>
-            @media print {
-              @page {
-                size: 76mm auto;
-                margin: 0;
-              }
-              body {
-                margin: 0;
-                padding: 0;
-              }
-            }
-            body {
-              font-family: 'JetBrainsNFMono', monospace;
-              font-size: 14px;
-              line-height: 1.5;
-              margin: 0 auto;
-              padding: 3mm 4mm;
-              box-sizing: border-box;
-              -webkit-font-smoothing: none;
-              font-smooth: never;
-            }
-            .ticket {
-              width: 100%;
-              text-align: center;
-            }
-            .header {
-              font-weight: bold;
-              font-size: 13px;
-              margin-bottom: 6px;
-            }
-            .divider {
-              border-top: 1px dashed #000;
-              margin: 6px 0;
-            }
-            .row {
-              display: flex;
-              justify-content: space-between;
-              margin: 2px 0;
-              font-size: 12px;
-            }
-            .label {
-              font-weight: bold;
-            }
-            .total {
-              font-weight: bold;
-              font-size: 12px;
-              border-top: 1px solid #000;
-              padding-top: 4px;
-              margin-top: 4px;
-            }
-            .footer {
-              margin-top: 8px;
-              font-size: 12px;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="ticket">
-            <div class="header">${this.ticketData.companyName}</div>
-            <div class="divider"></div>
+    if (!printWindow) return;
 
-            <div class="row">
-              <span class="label">Diseñador:</span>
-              <span>${this.ticketData.designer || 'N/A'}</span>
-            </div>
+    const doc = printWindow.document;
+    doc.head.innerHTML = '';
+    doc.body.innerHTML = '';
 
-            <div class="row">
-              <span class="label">Cliente:</span>
-              <span>${this.ticketData.client || 'N/A'}</span>
-            </div>
+    const title = doc.createElement('title');
+    title.textContent = `Ticket - ${this.ticketData.companyName}`;
+    doc.head.appendChild(title);
 
-            <div class="row">
-              <span class="label">Fecha Creación:</span>
-              <span>${this.formatDate(this.ticketData.creationDate)}</span>
-            </div>
+    const link = doc.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/styles.css';
+    doc.head.appendChild(link);
 
-            <div class="divider"></div>
+    const style = doc.createElement('style');
+    style.textContent = `
+      @media print {
+        @page { size: 76mm auto; margin: 0; }
+        body { margin: 0; padding: 0; }
+      }
+      body { margin: 0; padding: 0; }
+    `;
+    doc.head.appendChild(style);
+    doc.body.appendChild(preview.cloneNode(true));
 
-            <div class="label">Detalle de Venta:</div>
-            ${this.ticketData.saleDetails.map(item => `
-              <div class="row">
-                <span>${item.description || 'Sin descripción'}</span>
-                <span>x${item.quantity}</span>
-              </div>
-              <div class="row">
-                <span>S/ ${item.price.toFixed(2)}</span>
-                <span>S/ ${item.total.toFixed(2)}</span>
-              </div>
-            `).join('')}
-
-            <div class="divider"></div>
-
-            <div class="row">
-              <span class="label">Precio Total:</span>
-              <span>S/ ${this.ticketData.totalPrice.toFixed(2)}</span>
-            </div>
-
-            <div class="row">
-              <span class="label">Adelanto:</span>
-              <span>S/ ${this.ticketData.advance.toFixed(2)}</span>
-            </div>
-
-            <div class="row">
-              <span class="label">Descuento:</span>
-              <span>S/ ${this.ticketData.discount.toFixed(2)}</span>
-            </div>
-
-            <div class="row">
-              <span class="label">IGV (18%):</span>
-              <span>S/ ${this.ticketData.igv.toFixed(2)}</span>
-            </div>
-
-            <div class="row total">
-              <span>Monto Final:</span>
-              <span>S/ ${this.ticketData.finalAmount.toFixed(2)}</span>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="footer">
-              Fecha de Impresión: ${this.formatDate(this.ticketData.printDate)}
-            </div>
-          </div>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-      // Small delay to ensure content is loaded before printing
-      setTimeout(() => {
-        printWindow.print();
-      }, 100);
-    }
+    printWindow.focus();
+    setTimeout(() => printWindow.print(), 100);
   }
 
   formatDate(date: Date): string {

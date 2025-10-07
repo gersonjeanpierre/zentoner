@@ -110,70 +110,8 @@
   </div>
 
   <!-- Vista previa del ticket -->
-  <div class="ticket-preview">
-    <div class="ticket">
-      <div class="header">{{ ticketData.companyName }}</div>
-      <div class="divider"></div>
-
-      <div class="row">
-        <span class="label">Diseñador:</span>
-        <span>{{ ticketData.designer || 'N/A' }}</span>
-      </div>
-
-      <div class="row">
-        <span class="label">Cliente:</span>
-        <span>{{ ticketData.client || 'N/A' }}</span>
-      </div>
-
-      <div class="row">
-        <span class="label">Fecha Creación:</span>
-        <span>{{ formatDate(ticketData.creationDate) }}</span>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="label">Detalle de Venta:</div>
-      <div class="sale-details" *ngFor="let item of ticketData.saleDetails">
-        <div class="row">
-          <span>{{ item.description }}</span>
-          <span>x{{ item.quantity }}</span>
-        </div>
-        <div class="row">
-          <span>S/ {{ item.price.toFixed(2) }}</span>
-          <span>S/ {{ item.total.toFixed(2) }}</span>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="row">
-        <span class="label">Precio Total:</span>
-        <span>S/ {{ ticketData.totalPrice.toFixed(2) }}</span>
-      </div>
-
-      <div class="row">
-        <span class="label">Adelanto:</span>
-        <span>S/ {{ ticketData.advance.toFixed(2) }}</span>
-      </div>
-
-      <div class="row">
-        <span class="label">Descuento:</span>
-        <span>S/ {{ ticketData.discount.toFixed(2) }}</span>
-      </div>
-
-      <div class="row">
-        <span class="label">IGV (18%):</span>
-        <span>S/ {{ ticketData.igv.toFixed(2) }}</span>
-      </div>
-
-      <div class="row total">
-        <span>Monto Final:</span>
-        <span>S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="footer">Fecha de Impresión: {{ formatDate(ticketData.printDate) }}</div>
-    </div>
-  </div>
+  <app-ticket-preview
+    [ticketData]="ticketData"
+    [printDate]="ticketData.printDate"
+  ></app-ticket-preview>
 </div>
