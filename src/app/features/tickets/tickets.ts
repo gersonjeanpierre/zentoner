@@ -17,6 +17,9 @@ export default class Tickets {
 
   ticketData: TicketData = {
     companyName: '<-- LASER COLOR VELOZ -->',
+    address: 'JR. ORBEGOSO 243 - PISO 1 - STAND 243',
+    socialReason: 'ASESORIAS GLOBALES EMPRESARIALES E.I.R.L.',
+    ruc: '20412345678',
     client: 'ROCKY BALBOA',
     designer: 'GERSON SALAS',
     creationDate: new Date(),
@@ -58,7 +61,8 @@ export default class Tickets {
 
     const link = doc.createElement('link');
     link.rel = 'stylesheet';
-    link.href = cssHref;
+    link.href = 'styles.css';
+    // link.href = cssHref;
     doc.head.appendChild(link);
 
     const style = doc.createElement('style');

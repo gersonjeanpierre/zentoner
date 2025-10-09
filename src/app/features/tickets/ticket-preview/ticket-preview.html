@@ -1,61 +1,66 @@
 <div
-  class="ticket-preview w-full max-w-xs mx-auto text-center p-2"
+  class="ticket-preview w-full max-w-xs mx-auto text-center px-[6mm]"
   style="font-family: 'JetBrainsNFMono', monospace"
 >
-  <div class="header font-bold text-md mb-1">{{ ticketData.companyName }}</div>
-  <div class="divider my-1"></div>
+  <div class="header font-bold text-[16px] mb-1">{{ ticketData.companyName }}</div>
+  <div class="sub-header text-xs/5 mb-1">
+    {{ ticketData.socialReason }}<br />
+    RUC: {{ ticketData.ruc }}<br />
+    {{ ticketData.address }}
+    <div class="divider my-1"></div>
 
-  <div class="flex justify-between text-sm mb-1">
-    <span class="font-bold">Diseñador:</span>
-    <span>{{ ticketData.designer || 'N/A' }}</span>
-  </div>
-  <div class="flex justify-between text-sm mb-1">
-    <span class="font-bold">Cliente:</span>
-    <span>{{ ticketData.client || 'N/A' }}</span>
-  </div>
-  <div class="flex justify-between text-sm mb-1">
-    <span class="font-bold">Fecha Creación:</span>
-    <span>{{ formatDate(ticketData.creationDate) }}</span>
-  </div>
-
-  <div class="divider my-1"></div>
-  <div class="font-bold text-sm mb-1">Detalle de Venta:</div>
-  <!-- USAR @for -->
-
-  @for (item of ticketData.saleDetails; track $index) {
-    <div class="flex justify-between text-sm">
-      <span>{{ item.description || 'Sin descripción' }}</span>
-      <span>x{{ item.quantity }}</span>
+    <div class="flex justify-between text-sm mb-1">
+      <span class="font-bold">DISEÑADOR:</span>
+      <span>{{ ticketData.designer || 'N/A' }}</span>
     </div>
     <div class="flex justify-between text-sm mb-1">
-      <span>S/ {{ item.price.toFixed(2) }}</span>
-      <span>S/ {{ item.total.toFixed(2) }}</span>
+      <span class="font-bold">CLIENTE:</span>
+      <span>{{ ticketData.client || 'N/A' }}</span>
     </div>
-  }
+    <div class="flex justify-between text-sm mb-1">
+      <span class="font-bold">FECHA CREACIÓN:</span>
+      <span>{{ formatDate(ticketData.creationDate) }}</span>
+    </div>
 
-  <div class="divider my-1"></div>
-  <div class="flex justify-between text-sm">
-    <span class="font-bold">Precio Total:</span>
-    <span>S/ {{ ticketData.totalPrice.toFixed(2) }}</span>
-  </div>
-  <div class="flex justify-between text-sm">
-    <span class="font-bold">Adelanto:</span>
-    <span>S/ {{ ticketData.advance.toFixed(2) }}</span>
-  </div>
-  <div class="flex justify-between text-sm">
-    <span class="font-bold">Descuento:</span>
-    <span>S/ {{ ticketData.discount.toFixed(2) }}</span>
-  </div>
-  <div class="flex justify-between text-sm">
-    <span class="font-bold">IGV (18%):</span>
-    <span>S/ {{ ticketData.igv.toFixed(2) }}</span>
-  </div>
-  <div class="flex justify-between text-sm font-bold border-t pt-1 mt-1">
-    <span>Monto Final:</span>
-    <span>S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
-  </div>
-  <div class="divider my-1"></div>
-  <div class="footer text-sm mt-1">
-    Fecha de Impresión: {{ formatDate(printDate || ticketData.printDate) }}
+    <div class="divider my-1"></div>
+    <div class="font-bold text-sm mb-1">DETALLE DE VENTA:</div>
+    <!-- USAR @for -->
+
+    @for (item of ticketData.saleDetails; track $index) {
+      <div class="flex justify-between text-sm">
+        <span>{{ item.description.toUpperCase() || 'Sin descripción' }}</span>
+        <span>x{{ item.quantity }}</span>
+      </div>
+      <div class="flex justify-between text-sm mb-1">
+        <span>S/ {{ item.price.toFixed(2) }}</span>
+        <span>S/ {{ item.total.toFixed(2) }}</span>
+      </div>
+    }
+
+    <div class="divider my-1"></div>
+    <div class="flex justify-between text-sm">
+      <span class="font-bold">PRECIO TOTAL:</span>
+      <span class="font-bold">S/ {{ ticketData.totalPrice.toFixed(2) }}</span>
+    </div>
+    <div class="flex justify-between text-sm">
+      <span class="font-bold">ADELANTO:</span>
+      <span class="font-bold">S/ {{ ticketData.advance.toFixed(2) }}</span>
+    </div>
+    <div class="flex justify-between text-sm">
+      <span class="font-bold">DESCUENTO:</span>
+      <span class="font-bold">S/ {{ ticketData.discount.toFixed(2) }}</span>
+    </div>
+    <div class="flex justify-between text-sm">
+      <span class="font-bold">IGV (18%):</span>
+      <span class="font-bold">S/ {{ ticketData.igv.toFixed(2) }}</span>
+    </div>
+    <div class="flex justify-between text-sm font-bold border-t pt-1 mt-1">
+      <span>MONTO FINAL:</span>
+      <span class="font-bold">S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
+    </div>
+    <div class="divider my-1"></div>
+    <div class="footer text-sm mt-1">
+      Fecha de Impresión: {{ formatDate(printDate || ticketData.printDate) }}
+    </div>
   </div>
 </div>

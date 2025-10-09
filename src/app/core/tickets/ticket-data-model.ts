@@ -2,6 +2,9 @@ import { TicketItem } from "./ticket-item-model";
 
 export interface TicketData {
   companyName: string;
+  socialReason: string;
+  ruc: string;
+  address: string;
   designer: string;
   client: string;
   creationDate: Date;
