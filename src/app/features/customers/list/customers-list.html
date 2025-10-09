@@ -56,27 +56,31 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let c of filteredCustomers()">
-            <td>{{ c.fullName }}</td>
-            <td>{{ c.typeClient }}</td>
-            <td>{{ c.phone }}</td>
-            <td>{{ c.email }}</td>
-            <td>
-              <span class="badge" [ngClass]="c.isActive ? 'badge-success' : 'badge-error'">
-                {{ c.isActive ? 'Activo' : 'Inactivo' }}
-              </span>
-            </td>
-            <td class="flex gap-2">
-              <a class="btn btn-xs btn-primary" [routerLink]="['/customers/edit', c.id]">Editar</a>
-              <button
-                class="btn btn-xs btn-error"
-                (click)="deleteCustomer(c.id)"
-                [disabled]="!c.isActive"
-              >
-                Eliminar
-              </button>
-            </td>
-          </tr>
+          @for (customer of filteredCustomers(); track $index) {
+            <tr>
+              <td>{{ customer.fullName }}</td>
+              <td>{{ customer.typeClient }}</td>
+              <td>{{ customer.phone }}</td>
+              <td>{{ customer.email }}</td>
+              <td>
+                <span class="badge" [ngClass]="customer.isActive ? 'badge-success' : 'badge-error'">
+                  {{ customer.isActive ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="flex gap-2">
+                <a class="btn btn-xs btn-primary" [routerLink]="['/clientes/edit', customer.id]"
+                  >Editar</a
+                >
+                <button
+                  class="btn btn-xs btn-error"
+                  (click)="deleteCustomer(customer.id)"
+                  [disabled]="!customer.isActive"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>

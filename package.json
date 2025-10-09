@@ -5,7 +5,7 @@
   "author": "Gerson Jean Pierre",
   "main": "electron/main.js",
   "build": {
-    "appId": "com.example.zentoner",
+    "appId": "app.zentoner",
     "productName": "ZenToner",
     "buildDependenciesFromSource": false,
     "nodeGypRebuild": false,
@@ -14,20 +14,16 @@
       "electron/main.js",
       "electron/preload.js",
       "node_modules/**/*",
-      "!node_modules/@tailwindcss/oxide-*"
+      "!node_modules/@tailwindcss/oxide-*",
+      "!node_modules/@emnapi/**"
     ],
     "directories": {
       "buildResources": "assets"
     },
     "win": {
       "target": [
+        "nsis",
         "portable"
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
       ]
     }
   },
@@ -35,11 +31,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration production",
     "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
-    "package": "electron-builder",
-    "deploy:cf": "node generate-env.js && npm run build"
+    "package": "ng build --base-href ./ && electron-builder",
+    "deploy:cf": "node generate-env.js && npm run build",
+    "build:electron:win": "node set-supabase-env.js && ng build --base-href ./ --configuration production && electron-builder"
   },
   "prettier": {
     "printWidth": 100,
@@ -55,29 +52,32 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^20.3.2",
-    "@angular/compiler": "^20.3.2",
-    "@angular/core": "^20.3.2",
-    "@angular/forms": "^20.3.2",
-    "@angular/platform-browser": "^20.3.2",
-    "@angular/router": "^20.3.2",
-    "@supabase/supabase-js": "^2.58.0",
-    "@tailwindcss/postcss": "^4.1.13",
+    "@angular/common": "^20.3.4",
+    "@angular/compiler": "^20.3.4",
+    "@angular/core": "^20.3.4",
+    "@angular/forms": "^20.3.4",
+    "@angular/platform-browser": "^20.3.4",
+    "@angular/router": "^20.3.4",
+    "@supabase/supabase-js": "^2.75.0",
+    "@tailwindcss/postcss": "^4.1.14",
+    "camelcase-keys": "^10.0.0",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.2",
-    "tailwindcss": "^4.1.13",
+    "snakecase-keys": "^9.0.2",
+    "tailwindcss": "^4.1.14",
     "tslib": "^2.8.1",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.3.3",
-    "@angular/cli": "^20.3.3",
-    "@angular/compiler-cli": "^20.3.2",
-    "@iconify/json": "^2.2.390",
+    "@angular/build": "^20.3.5",
+    "@angular/cli": "^20.3.5",
+    "@angular/compiler-cli": "^20.3.4",
+    "@iconify/json": "^2.2.393",
     "@iconify/tailwind4": "^1.0.6",
+    "@types/humps": "^2.0.6",
     "@types/jasmine": "~5.1.9",
-    "daisyui": "^5.1.25",
-    "electron": "^38.2.0",
+    "daisyui": "^5.1.29",
+    "electron": "^38.2.2",
     "electron-builder": "^26.0.12",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.4",
@@ -86,6 +86,6 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "prettier": "3.6.2",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.3"
   }
 }

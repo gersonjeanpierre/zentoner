@@ -56,7 +56,7 @@ export default class CustomersEdit implements OnInit {
   }
 
   async onSubmit() {
-    if (this.form.invalid) return;
+    // if (this.form.invalid) return;
     this.loading.set(true);
     this.error.set(null);
     const id = this.route.snapshot.paramMap.get('id');
@@ -71,7 +71,7 @@ export default class CustomersEdit implements OnInit {
     try {
       await (this.customersService.update(id, customer) as Promise<CustomerModel>);
       this.success.set(true);
-      setTimeout(() => this.router.navigate(['/customers']), 1200);
+      setTimeout(() => this.router.navigate(['/clientes']), 800);
     } catch (e: any) {
       this.error.set(e.message || 'Error al actualizar cliente');
     }
@@ -90,7 +90,7 @@ export default class CustomersEdit implements OnInit {
     try {
       await (this.customersService.softDelete(id) as Promise<CustomerModel>);
       this.deleteSuccess.set(true);
-      setTimeout(() => this.router.navigate(['/customers']), 1200);
+      setTimeout(() => this.router.navigate(['/clientes']), 1000);
     } catch (e: any) {
       this.deleteError.set(e.message || 'Error al eliminar cliente');
     }

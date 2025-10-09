@@ -23,8 +23,26 @@
       </div>
       <div class="flex-1 px-2 text-xl font-bold">ERP</div>
     </div>
+    <!-- Usuario y sesión activa -->
+    <div
+      id="user-session"
+      class="flex items-center gap-4 p-2 bg-base-100 border-b border-base-200 sticky top-0 z-10"
+    >
+      @if (user()) {
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">Usuario:</span>
+          <span class="badge badge-neutral">{{ user().email }}</span>
+        </div>
+      }
+      @if (session()) {
+        <div class="flex items-center gap-2">
+          <span class="font-semibold">Sesión activa:</span>
+          <span class="badge badge-success">{{ session() }}</span>
+        </div>
+      }
+    </div>
     <!-- Main content -->
-    <div class="p-4 flex-1">
+    <div id="main-content" class="p-4 flex-1 overflow-y-auto">
       <router-outlet></router-outlet>
     </div>
   </div>

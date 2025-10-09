@@ -24,6 +24,14 @@ export const routes: Routes = [
           { path: 'create', loadComponent: () => import('./features/customers/create/customers-create').then(m => m.default) },
           { path: 'edit/:id', loadComponent: () => import('./features/customers/edit/customers-edit').then(m => m.default) },
         ]
+      },
+      {
+        path: 'tickets',
+        loadComponent: () => import('@features/tickets/tickets')
+      },
+      {
+        path: '**',
+        redirectTo: 'dashboard'
       }
     ]
   },

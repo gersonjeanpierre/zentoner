@@ -2,6 +2,14 @@
 @plugin "daisyui";
 @plugin "@iconify/tailwind4";
 
+@font-face {
+  font-family: 'JetBrainsNFMono';
+  src: url('/fonts/JetBrainsMonoNerdFontMono-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @plugin "daisyui/theme" {
   name: "corporate";
   default: true;

@@ -61,7 +61,7 @@ export default class CustomersList implements OnInit {
       await this.customersService.softDelete(id);
       this.deleteSuccess.set(true);
       this.ngOnInit();
-      setTimeout(() => this.deleteSuccess.set(false), 1500);
+      setTimeout(() => this.deleteSuccess.set(false), 800);
     } catch (e: any) {
       alert('Error al eliminar: ' + (e.message || e));
     }

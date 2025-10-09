@@ -13,6 +13,7 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+bun.lock
 
 # IDEs and editors
 .idea/
