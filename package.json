@@ -22,13 +22,8 @@
     },
     "win": {
       "target": [
+        "nsis",
         "portable"
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
       ]
     }
   },
@@ -40,7 +35,8 @@
     "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
     "package": "ng build --base-href ./ && electron-builder",
-    "deploy:cf": "node generate-env.js && npm run build"
+    "deploy:cf": "node generate-env.js && npm run build",
+    "build:electron:win": "node set-supabase-env.js && ng build --base-href ./ --configuration production && electron-builder"
   },
   "prettier": {
     "printWidth": 100,
