@@ -3,8 +3,8 @@
 @plugin "@iconify/tailwind4";
 
 @font-face {
-  font-family: 'JetBrainsNFMono';
-  src: url('/fonts/JetBrainsMonoNerdFontMono-Regular.ttf');
+  font-family: 'RobotoMono';
+  src: url('/fonts/RobotoMono-Regular.ttf');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -35,12 +35,12 @@
   --color-warning-content: oklch(0% 0 0);
   --color-error: oklch(70% 0.191 22.216);
   --color-error-content: oklch(0% 0 0);
-  --radius-selector: 2rem;
+  --radius-selector: 1rem;
   --radius-field: 2rem;
-  --radius-box: 1rem;
-  --size-selector: 0.28125rem;
-  --size-field: 0.28125rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.3125rem;
+  --size-field: 0.25rem;
   --border: 2px;
   --depth: 1;
-  --noise: 1;
+  --noise: 0;
 }

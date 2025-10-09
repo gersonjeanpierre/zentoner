@@ -9,30 +9,31 @@ import { TicketPreview } from './ticket-preview/ticket-preview';
 @Component({
   selector: 'app-tickets',
   imports: [CommonModule, FormsModule, TicketPreview],
-  templateUrl: './tickets.html',
-  styleUrl: './tickets.css'
+  templateUrl: './tickets.html'
 })
 export default class Tickets {
 
+  includeIGV = true; // Checkbox para incluir IGV
 
   ticketData: TicketData = {
     companyName: 'LASER COLOR VELOZ',
-    address: 'JR. ORBEGOSO 243 - PISO 1 - STAND 243',
+    address: 'JR. ORBEGOSO 243 PISO 1 STAND 243',
     socialReason: 'ASESORIAS GLOBALES EMPRESARIALES E.I.R.L.',
-    ruc: '20412345678',
+    ruc: '20607873411',
     client: 'ROCKY BALBOA',
     designer: 'GERSON SALAS',
+    methodOfPayment: 'YAPE',
     creationDate: new Date(),
     saleDetails: [
-      { description: 'Diseño Logo', quantity: 1, price: 150.00, total: 150.00 },
-      { description: 'Impresión Tarjetas', quantity: 100, price: 0.50, total: 50.00 }
+      { description: 'Impresión A3 COUCHE 300GR', quantity: 5, price: 2, total: 10.00 },
+      { description: 'Impresión A4 BOND 90GR', quantity: 100, price: 0.50, total: 50.00 }
     ],
-    totalPrice: 200.00,
-    advance: 50.00,
-    discount: 10.00,
-    igv: 32.40,
-    finalAmount: 222.40,
-    printDate: new Date()
+    totalPrice: 0,
+    advance: 0,
+    discount: 0,
+    igv: 0,
+    finalAmount: 0,
+    printDate: new Date(),
   };
 
   constructor() {
@@ -128,8 +129,8 @@ export default class Tickets {
     // Calculate total price from sale details
     this.ticketData.totalPrice = this.ticketData.saleDetails.reduce((sum, item) => sum + item.total, 0);
 
-    // Calculate IGV (18%)
-    this.ticketData.igv = this.ticketData.totalPrice * 0.18;
+    // Calculate IGV (18%) only if includeIGV is true
+    this.ticketData.igv = this.includeIGV ? this.ticketData.totalPrice * 0.18 : 0;
 
     // Calculate final amount (total - discount + IGV - advance)
     this.ticketData.finalAmount = this.ticketData.totalPrice - this.ticketData.discount + this.ticketData.igv - this.ticketData.advance;

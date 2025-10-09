@@ -10,6 +10,7 @@ import { TicketData } from '@core/tickets';
 export class TicketPreview {
   @Input() ticketData!: TicketData;
   @Input() printDate!: Date;
+  @Input() includeIGV = true;
 
   formatDate(date: Date): string {
     const format = date.toLocaleDateString('es-PE', {

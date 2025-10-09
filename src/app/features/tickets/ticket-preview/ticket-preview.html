@@ -1,12 +1,12 @@
 <div
-  class="ticket-preview w-full max-w-xs mx-auto text-center pl-[6.5mm] pr-[6mm]"
-  style="font-family: 'JetBrainsNFMono', monospace"
+  class="ticket-preview w-full max-w-xs mx-auto text-center pl-[7mm] pr-[6mm]"
+  style="font-family: 'RobotoMono', monospace"
 >
-  <div class="header font-bold text-[16px] mb-1">{{ ticketData.companyName }}</div>
-  <div class="sub-header text-[11px]/5 mb-1">
-    {{ ticketData.socialReason }}<br />
-    RUC: {{ ticketData.ruc }}<br />
-    {{ ticketData.address }}
+  <div class="header font-bold text-[14px] mb-1">{{ ticketData.companyName }}</div>
+  <div class="sub-header flex flex-col text-[11px] mb-1">
+    <span class="px-8">{{ ticketData.socialReason }}</span>
+    <span> RUC: {{ ticketData.ruc }} </span>
+    <span> {{ ticketData.address }} </span>
     <div class="mt-2"></div>
     <div class="flex justify-between text-xs mb-1">
       <span class="font-bold">DISEÑADOR:</span>
@@ -15,6 +15,10 @@
     <div class="flex justify-between text-xs mb-1">
       <span class="font-bold">CLIENTE:</span>
       <span>{{ ticketData.client || 'N/A' }}</span>
+    </div>
+    <div class="flex justify-between text-xs mb-1">
+      <span class="font-bold">MÉTODO DE PAGO:</span>
+      <span>{{ ticketData.methodOfPayment || 'N/A' }}</span>
     </div>
     <div class="flex justify-between text-xs mb-1">
       <span class="font-bold">FECHA CREACIÓN:</span>
@@ -49,10 +53,12 @@
       <span class="font-bold">DESCUENTO:</span>
       <span class="font-bold">S/ {{ ticketData.discount.toFixed(2) }}</span>
     </div>
-    <div class="flex justify-between text-xs">
-      <span class="font-bold">IGV (18%):</span>
-      <span class="font-bold">S/ {{ ticketData.igv.toFixed(2) }}</span>
-    </div>
+    @if (includeIGV) {
+      <div class="flex justify-between text-xs">
+        <span class="font-bold">IGV (18%):</span>
+        <span class="font-bold">S/ {{ ticketData.igv.toFixed(2) }}</span>
+      </div>
+    }
     <div class="flex justify-between text-xs font-bold pt-1 mt-2">
       <span>MONTO FINAL:</span>
       <span class="font-bold">S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
