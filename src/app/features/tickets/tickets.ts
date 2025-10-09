@@ -41,7 +41,7 @@ export default class Tickets {
     const preview = document.querySelector('.ticket-preview');
     if (!preview) return;
 
-    const printWindow = window.open('', '_blank', 'width=300,height=600');
+    const printWindow = window.open('', '_blank', 'width=450,height=650');
     if (!printWindow) return;
 
     const doc = printWindow.document;
@@ -52,9 +52,13 @@ export default class Tickets {
     title.textContent = `Ticket - ${this.ticketData.companyName}`;
     doc.head.appendChild(title);
 
+    const styleLink = document.querySelector('link[rel="stylesheet"][href*="styles-"]') as HTMLLinkElement;
+    const cssHref = styleLink ? styleLink.href : '/zentoner/browser/styles.css';
+
+
     const link = doc.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'styles.css';
+    link.href = cssHref;
     doc.head.appendChild(link);
 
     const style = doc.createElement('style');
