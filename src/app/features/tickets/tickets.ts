@@ -78,8 +78,10 @@ export default class Tickets {
     doc.head.appendChild(style);
     doc.body.appendChild(preview.cloneNode(true));
 
-    printWindow.focus();
-    setTimeout(() => printWindow.print(), 100);
+    printWindow.document.fonts.ready.then(() => {
+      printWindow.focus();
+      printWindow.print();
+    })
   }
 
   formatDate(date: Date): string {

@@ -2,40 +2,43 @@
   class="ticket-preview w-full max-w-xs mx-auto text-center pl-[7mm] pr-[6mm]"
   style="font-family: 'OpenSans', monospace"
 >
-  <div class="header font-bold text-[14px] mb-1">{{ ticketData.companyName }}</div>
-  <div class="sub-header flex flex-col text-[10.5px] mb-1">
-    <span class="px-8">{{ ticketData.socialReason }}</span>
-    <span> RUC: {{ ticketData.ruc }} </span>
-    <span> {{ ticketData.address }} </span>
+  <div class="header font-bold text-[14px] mb-1">
+    {{ ticketData.companyName }}
+  </div>
+  <div class="sub-header flex flex-col mb-1">
+    <div class="flex flex-col text-[11px]">
+      <span class="px-8">{{ ticketData.socialReason }}</span>
+      <span> RUC: {{ ticketData.ruc }} </span>
+      <span> {{ ticketData.address }} </span>
+    </div>
     <div class="mt-2"></div>
 
-    <div class="flex justify-between text-xs mb-1">
+    <div class="flex justify-between text-[12px]">
       <span class="font-bold">TICKET N°:</span>
-      <span>{{ ticketData.correlative || '000' }}</span>
+      <span class="font-semibold">{{ ticketData.correlative || '000' }}</span>
     </div>
-
-    <div class="flex justify-between text-xs mb-1">
+    <div class="flex justify-between text-[12px]">
       <span class="font-bold">DISEÑADOR:</span>
-      <span>{{ ticketData.designer || 'N/A' }}</span>
+      <span class="font-semibold">{{ ticketData.designer || 'N/A' }}</span>
     </div>
-    <div class="flex justify-between text-xs mb-1">
+    <div class="flex justify-between text-[12px]">
       <span class="font-bold">CLIENTE:</span>
-      <span>{{ ticketData.client || 'N/A' }}</span>
+      <span class="font-semibold">{{ ticketData.client || 'N/A' }}</span>
     </div>
-    <div class="flex justify-between text-xs mb-1">
+    <div class="flex justify-between text-[12px]">
       <span class="font-bold">MÉTODO DE PAGO:</span>
-      <span>{{ ticketData.methodOfPayment || 'N/A' }}</span>
+      <span class="font-semibold">{{ ticketData.methodOfPayment || 'N/A' }}</span>
     </div>
 
-    <div class="font-bold text-xs mb-1">DETALLE DE VENTA:</div>
-    <div class="grid grid-cols-4 gap-1 text-xs mb-1 font-bold">
-      <span class="text-left">Descr</span>
-      <span class="text-right">Cantidad</span>
-      <span class="text-right">P.Unt</span>
-      <span class="text-right">Importe</span>
+    <div class="font-bold text-xs my-1">DETALLE DE VENTA</div>
+    <div class="grid grid-cols-4 gap-1 text-[12px] font-bold">
+      <span class="text-left">DESCRIPCIÓN</span>
+      <span class="text-right">CANT</span>
+      <span class="text-right">P. UNIT</span>
+      <span class="text-right">IMPORTE</span>
     </div>
     @for (item of ticketData.saleDetails; track $index) {
-      <div class="grid grid-cols-4 gap-1 text-xs mb-1">
+      <div class="grid grid-cols-4 text-[12px]">
         <span class="col-span-4 text-left">{{
           item.description.toUpperCase() || 'Sin descripción'
         }}</span>
@@ -64,12 +67,11 @@
         <span class="font-bold">S/ {{ ticketData.igv.toFixed(2) }}</span>
       </div>
     }
-    <div class="flex justify-between text-xs font-bold pt-1 mt-2">
+    <div class="flex justify-between text-xs font-bold mt-2">
       <span>MONTO FINAL:</span>
       <span class="font-bold">S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
     </div>
-    <div class="mt-2"></div>
-    <div class="footer text-xs mt-1">
+    <div class="footer text-[11px] mt-1">
       Fecha de Impresión: {{ formatDate(printDate || ticketData.printDate) }}
     </div>
   </div>
