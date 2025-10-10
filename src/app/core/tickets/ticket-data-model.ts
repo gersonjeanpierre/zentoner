@@ -1,6 +1,8 @@
 import { TicketItem } from "./ticket-item-model";
 
 export interface TicketData {
+  id?: string;
+  correlative?: number;
   companyName: string;
   socialReason: string;
   ruc: string;

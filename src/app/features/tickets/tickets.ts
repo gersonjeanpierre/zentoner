@@ -20,8 +20,9 @@ export default class Tickets {
     address: 'JR. ORBEGOSO 243 PISO 1 STAND 243',
     socialReason: 'ASESORIAS GLOBALES EMPRESARIALES E.I.R.L.',
     ruc: '20607873411',
-    client: 'ROCKY BALBOA',
+    correlative: 777,
     designer: 'GERSON SALAS',
+    client: 'JHON WICK',
     methodOfPayment: 'YAPE',
     creationDate: new Date(),
     saleDetails: [
