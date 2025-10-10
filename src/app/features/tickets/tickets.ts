@@ -26,8 +26,8 @@ export default class Tickets {
     methodOfPayment: 'YAPE',
     creationDate: new Date(),
     saleDetails: [
-      { description: 'Impresión A3 COUCHE 300GR', quantity: 5, price: 2, total: 10.00 },
-      { description: 'Impresión A4 BOND 90GR', quantity: 100, price: 0.50, total: 50.00 }
+      { description: 'Impresión 13"x19" COUCHE 300GR', quantity: 5, price: 2, total: 10.00 },
+      { description: 'Impresión 13"x19" OPALINA 250GR', quantity: 100, price: 2.50, total: 250 }
     ],
     totalPrice: 0,
     advance: 0,
@@ -80,7 +80,6 @@ export default class Tickets {
 
     printWindow.document.fonts.ready.then(() => {
       printWindow.focus();
-      printWindow.print();
     })
   }
 

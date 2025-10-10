@@ -7,38 +7,38 @@
   </div>
   <div class="sub-header flex flex-col mb-1">
     <div class="flex flex-col text-[11px]">
-      <span class="px-8">{{ ticketData.socialReason }}</span>
+      <span>{{ ticketData.socialReason }}</span>
       <span> RUC: {{ ticketData.ruc }} </span>
       <span> {{ ticketData.address }} </span>
     </div>
     <div class="mt-2"></div>
 
-    <div class="flex justify-between text-[12px]">
+    <div class="flex justify-between text-[11px]">
       <span class="font-bold">TICKET N°:</span>
       <span class="font-semibold">{{ ticketData.correlative || '000' }}</span>
     </div>
-    <div class="flex justify-between text-[12px]">
+    <div class="flex justify-between text-[11px]">
       <span class="font-bold">DISEÑADOR:</span>
       <span class="font-semibold">{{ ticketData.designer || 'N/A' }}</span>
     </div>
-    <div class="flex justify-between text-[12px]">
+    <div class="flex justify-between text-[11px]">
       <span class="font-bold">CLIENTE:</span>
       <span class="font-semibold">{{ ticketData.client || 'N/A' }}</span>
     </div>
-    <div class="flex justify-between text-[12px]">
+    <div class="flex justify-between text-[11px]">
       <span class="font-bold">MÉTODO DE PAGO:</span>
       <span class="font-semibold">{{ ticketData.methodOfPayment || 'N/A' }}</span>
     </div>
 
     <div class="font-bold text-xs my-1">DETALLE DE VENTA</div>
-    <div class="grid grid-cols-4 gap-1 text-[12px] font-bold">
+    <div class="grid grid-cols-4 gap-1 text-[11px] font-bold">
       <span class="text-left">DESCRIPCIÓN</span>
       <span class="text-right">CANT</span>
       <span class="text-right">P. UNIT</span>
       <span class="text-right">IMPORTE</span>
     </div>
     @for (item of ticketData.saleDetails; track $index) {
-      <div class="grid grid-cols-4 text-[12px]">
+      <div class="grid grid-cols-4 text-[11px]">
         <span class="col-span-4 text-left">{{
           item.description.toUpperCase() || 'Sin descripción'
         }}</span>
