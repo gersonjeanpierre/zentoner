@@ -5,7 +5,6 @@ import { TicketData } from '@core/tickets';
   selector: 'app-ticket-preview',
   imports: [],
   templateUrl: './ticket-preview.html',
-  styleUrl: './ticket-preview.css'
 })
 export class TicketPreview {
   @Input() ticketData!: TicketData;

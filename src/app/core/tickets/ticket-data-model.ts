@@ -16,6 +16,7 @@ export interface TicketData {
   discount: number;
   advance: number;
   igv: number;
+  saldo: number;
   finalAmount: number;
   printDate: Date;
 }

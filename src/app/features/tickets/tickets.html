@@ -4,197 +4,260 @@
     <div class="card bg-base-100 shadow-xl">
       <div class="card-body">
         <h2 class="card-title text-2xl mb-4">Generar Ticket</h2>
-
-        <!-- Diseñador y Cliente en una fila -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="form-control">
+        <!-- Diseñador y Cliente en una fila mejorada -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+          <div class="form-control w-full">
             <label class="label">
-              <span class="label-text font-semibold">Diseñador:</span>
+              <span class="label-text font-semibold">Diseñador</span>
             </label>
-            <input
-              type="text"
-              [(ngModel)]="ticketData.designer"
-              (input)="updateDesigner($event.target.value)"
-              class="input input-bordered input-sm"
-              placeholder="Nombre del diseñador"
-            />
+            <div class="join w-full">
+              <span
+                class="join-item input input-neutral input-md bg-base-200 pointer-events-none w-12"
+                >👨‍🎨</span
+              >
+              <input
+                type="text"
+                [(ngModel)]="ticketData.designer"
+                (input)="updateDesigner($event.target.value)"
+                class="join-item input input-neutral input-md w-full focus:outline-none cursor-pointer"
+                placeholder="Nombre del diseñador"
+                autocomplete="off"
+              />
+            </div>
           </div>
-
-          <div class="form-control">
+          <div class="form-control w-full">
             <label class="label">
-              <span class="label-text font-semibold">Cliente:</span>
+              <span class="label-text font-semibold">Cliente</span>
             </label>
-            <input
-              type="text"
-              [(ngModel)]="ticketData.client"
-              class="input input-bordered input-sm"
-              placeholder="Nombre del cliente"
-            />
+            <div class="join w-full">
+              <span
+                class="join-item input input-neutral input-md bg-base-200 pointer-events-none w-12"
+                >🧑‍💼</span
+              >
+              <input
+                type="text"
+                [(ngModel)]="ticketData.client"
+                class="join-item input input-neutral input-md w-full cursor-pointer focus:outline-none"
+                placeholder="Nombre del cliente"
+                autocomplete="off"
+              />
+            </div>
           </div>
-        </div>
-
-        <!-- Fecha de Creación -->
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">Fecha de Creación:</span>
-          </label>
-          <input
-            type="datetime-local"
-            [value]="ticketData.creationDate.toISOString().slice(0, 16)"
-            (input)="updateCreationDate($event.target.value)"
-            class="input input-bordered input-sm max-w-xs"
-          />
         </div>
 
         <!-- Detalle de Venta -->
         <div class="form-control w-full">
           <label class="label">
-            <span class="label-text font-semibold">Detalle de Venta:</span>
+            <span class="text-xl font-semibold">Detalle de Venta:</span>
           </label>
-          <div class="space-y-2">
-            @for (item of ticketData.saleDetails; track $index) {
-              <div
-                class="card card-compact bg-base-200 flex flex-row items-center gap-2 p-2 shadow-sm"
-              >
-                <input
-                  type="text"
-                  placeholder="Descripción"
-                  [value]="item.description"
-                  (input)="updateSaleItem($index, 'description', $event.target.value)"
-                  class="input input-bordered input-sm flex-1"
-                />
+          <div>
+            <div class="grid grid-cols-6 gap-2 text-lg mb-1">
+              <span class="text-left">Tamaño</span>
+              <span class="text-left">Tipo</span>
+              <span class="text-left">Maquina</span>
+              <span class="text-left">Cantidad</span>
+              <span class="text-left">Precio Unitario</span>
+              <span class="text-left">Importe</span>
+            </div>
+            <div class="space-y-2">
+              @for (item of ticketData.saleDetails; track $index) {
+                <div class="grid grid-cols-6 gap-2 items-center mt-3 mb-3">
+                  <!-- Tamaño -->
+                  <input
+                    type="text"
+                    class="input input-bordered input-md cursor-pointer"
+                    placeholder="Tamaño"
+                    readonly
+                    [value]="item.size"
+                    (focus)="openModalForField($index, 'size')"
+                    (click)="openModalForField($index, 'size')"
+                  />
+                  <!-- Tipo -->
+                  <input
+                    type="text"
+                    class="input input-bordered input-md cursor-pointer"
+                    placeholder="Tipo"
+                    readonly
+                    [value]="item.type"
+                    (focus)="openModalForField($index, 'type')"
+                    (click)="openModalForField($index, 'type')"
+                  />
+                  <!-- Maquina -->
+                  <input
+                    type="text"
+                    class="input input-bordered input-md cursor-pointer"
+                    placeholder="Maquina"
+                    readonly
+                    [value]="item.machine"
+                    (focus)="openModalForField($index, 'machine')"
+                    (click)="openModalForField($index, 'machine')"
+                  />
+
+                  <!-- Cantidad -->
+                  <input
+                    type="number"
+                    class="input input-bordered input-md text-center"
+                    placeholder="Cantidad"
+                    [value]="item.quantity"
+                    min="1"
+                    (input)="updateSaleItem($index, 'quantity', $event.target.value)"
+                  />
+                  <!-- Precio Unitario -->
+                  <input
+                    type="number"
+                    class="input input-bordered input-md text-center"
+                    placeholder="Precio"
+                    [value]="item.price"
+                    min="0"
+                    step="0.01"
+                    (input)="updateSaleItem($index, 'price', $event.target.value)"
+                  />
+                  <!-- Importe -->
+                  <div class="flex justify-end">
+                    <div class="badge badge-success badge-md whitespace-nowrap">
+                      S/ {{ item.total.toFixed(2) }}
+                    </div>
+                    <button
+                      (click)="removeSaleItem($index)"
+                      class="btn btn-error w-9 h-9 btn-circle ml-1"
+                      title="Eliminar"
+                    >
+                      <span
+                        class="icon-[material-symbols--delete-forever-rounded] w-6 h-6 bg-rose-100"
+                      ></span>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button (click)="addSaleItem()" class="btn btn-success btn-md mt-2">
+              <span class="icon-[material-symbols--add-circle-rounded] w-6 h-6"></span>
+              <span class="text-lg">Agregar</span>
+            </button>
+          </div>
+
+          <!-- Adelanto y Descuento mejorados -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div class="form-control w-full">
+              <label class="label">
+                <span class="label-text font-semibold">Adelanto</span>
+              </label>
+              <div class="join w-full">
+                <span
+                  class="join-item input input-neutral input-md bg-base-200 pointer-events-none w-12"
+                  >💸</span
+                >
                 <input
                   type="number"
-                  placeholder="Cant."
-                  [value]="item.quantity"
-                  (input)="updateSaleItem($index, 'quantity', $event.target.value)"
-                  class="input input-bordered input-sm w-16 text-center"
-                  min="1"
-                />
-                <input
-                  type="number"
-                  placeholder="Precio"
-                  [value]="item.price"
-                  (input)="updateSaleItem($index, 'price', $event.target.value)"
-                  class="input input-bordered input-sm w-20 text-center"
+                  [(ngModel)]="ticketData.advance"
+                  (ngModelChange)="updateAdvance($event)"
+                  class="join-item input input-neutral input-md w-full cursor-pointer focus:outline-none"
                   step="0.01"
                   min="0"
+                  placeholder="0.00"
                 />
-                <div class="badge badge-success badge-lg whitespace-nowrap">
-                  S/ {{ item.total.toFixed(2) }}
-                </div>
-                <button
-                  (click)="removeSaleItem($index)"
-                  class="btn btn-error btn-xs btn-circle ml-1"
-                  title="Eliminar"
+              </div>
+            </div>
+            <div class="form-control w-full">
+              <label class="label">
+                <span class="label-text font-semibold">Descuento</span>
+              </label>
+              <div class="join w-full">
+                <span
+                  class="join-item input input-neutral input-md bg-base-200 pointer-events-none w-12"
+                  >🏷️</span
                 >
-                  ×
-                </button>
+                <input
+                  type="number"
+                  [(ngModel)]="ticketData.discount"
+                  (ngModelChange)="updateDiscount($event)"
+                  class="join-item input input-neutral input-md w-full cursor-pointer focus:outline-none"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Checkbox IGV -->
+          <div class="form-control mt-5">
+            <label class="label cursor-pointer justify-start gap-2">
+              <input
+                type="checkbox"
+                [(ngModel)]="includeIGV"
+                (ngModelChange)="calculateTotals()"
+                class="checkbox checkbox-primary"
+              />
+              <span class="label-text font-semibold">Incluir IGV (18%)</span>
+            </label>
+          </div>
+
+          <!-- Totales -->
+          <div class="bg-base-200 p-4 rounded-lg space-y-2 mt-4">
+            <div class="flex justify-between text-sm">
+              <span class="font-semibold">Precio Total:</span>
+              <span>S/ {{ ticketData.totalPrice.toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="font-semibold">Saldo:</span>
+              <span class="text-error font-bold"> S/ {{ ticketData.saldo.toFixed(2) }} </span>
+            </div>
+            @if (includeIGV) {
+              <div class="flex justify-between text-md">
+                <span class="font-semibold">IGV (18%):</span>
+                <span>S/ {{ ticketData.igv.toFixed(2) }}</span>
               </div>
             }
-          </div>
-          <button (click)="addSaleItem()" class="btn btn-success btn-sm mt-2">
-            + Agregar Item
-          </button>
-        </div>
-
-        <!-- Adelanto y Descuento -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-semibold">Adelanto:</span>
-            </label>
-            <input
-              type="number"
-              [(ngModel)]="ticketData.advance"
-              (ngModelChange)="updateAdvance($event)"
-              class="input input-bordered input-sm"
-              step="0.01"
-              min="0"
-              placeholder="0.00"
-            />
+            <div class="flex justify-between text-lg font-bold border-t border-base-300 pt-2">
+              <span>Monto Final:</span>
+              <span class="text-primary">S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
+            </div>
           </div>
 
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-semibold">Descuento:</span>
-            </label>
-            <input
-              type="number"
-              [(ngModel)]="ticketData.discount"
-              (ngModelChange)="updateDiscount($event)"
-              class="input input-bordered input-sm"
-              step="0.01"
-              min="0"
-              placeholder="0.00"
-            />
+          <!-- Botón Imprimir -->
+          <div class="card-actions justify-end mt-4">
+            <button class="btn btn-primary btn-wide" (click)="printTicket()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                />
+              </svg>
+              Imprimir Ticket
+            </button>
           </div>
-        </div>
-
-        <!-- Checkbox IGV -->
-        <div class="form-control">
-          <label class="label cursor-pointer justify-start gap-2">
-            <input
-              type="checkbox"
-              [(ngModel)]="includeIGV"
-              (ngModelChange)="calculateTotals()"
-              class="checkbox checkbox-primary"
-            />
-            <span class="label-text font-semibold">Incluir IGV (18%)</span>
-          </label>
-        </div>
-
-        <!-- Totales -->
-        <div class="divider"></div>
-        <div class="bg-base-200 p-4 rounded-lg space-y-2">
-          <div class="flex justify-between text-sm">
-            <span class="font-semibold">Precio Total:</span>
-            <span>S/ {{ ticketData.totalPrice.toFixed(2) }}</span>
-          </div>
-          <div class="flex justify-between text-sm" *ngIf="includeIGV">
-            <span class="font-semibold">IGV (18%):</span>
-            <span>S/ {{ ticketData.igv.toFixed(2) }}</span>
-          </div>
-          <div class="flex justify-between text-lg font-bold border-t border-base-300 pt-2">
-            <span>Monto Final:</span>
-            <span class="text-primary">S/ {{ ticketData.finalAmount.toFixed(2) }}</span>
-          </div>
-        </div>
-
-        <!-- Botón Imprimir -->
-        <div class="card-actions justify-end mt-4">
-          <button class="btn btn-primary btn-wide" (click)="printTicket()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-              />
-            </svg>
-            Imprimir Ticket
-          </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Vista previa del ticket - FIJA A LA DERECHA SIN SCROLL -->
-  <div class="fixed top-20 right-4 w-92 overflow-hidden px-2 pb-10">
-    <div class="card bg-white shadow-lg">
-      <div class="card-body h-full">
-        <app-ticket-preview
-          [ticketData]="ticketData"
-          [printDate]="ticketData.printDate"
-          [includeIGV]="includeIGV"
-        ></app-ticket-preview>
+    <!-- Vista previa del ticket - FIJA A LA DERECHA SIN SCROLL -->
+    <div class="fixed top-20 right-4 w-92 overflow-hidden px-2 pb-10">
+      <div class="card bg-white shadow-lg">
+        <div class="card-body h-full">
+          <app-ticket-preview
+            [ticketData]="ticketData"
+            [printDate]="ticketData.printDate"
+            [includeIGV]="includeIGV"
+          ></app-ticket-preview>
+        </div>
       </div>
     </div>
   </div>
 </div>
+<!-- Modal de búsqueda reutilizable -->
+<modal-search
+  [open]="modalOpen"
+  [list]="modalList"
+  [title]="modalTitle"
+  (selectItem)="onModalSelect($event)"
+  (closed)="onModalClosed()"
+></modal-search>

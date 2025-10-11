@@ -1,17 +1,67 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TicketData, TicketItem } from '@core/tickets';
 import { TicketPreview } from './ticket-preview/ticket-preview';
+import { ViewChild } from '@angular/core';
+import { ModalSearch } from './modal-search/modal-search';
+import { itemSizes, itemMachines, itemTypes } from '@shared/mockup';
 
 
 
 @Component({
   selector: 'app-tickets',
-  imports: [CommonModule, FormsModule, TicketPreview],
+  imports: [CommonModule, FormsModule, TicketPreview, ModalSearch],
   templateUrl: './tickets.html'
 })
 export default class Tickets {
+  // Modal search state
+  modalOpen = false;
+  modalList: string[] = [];
+  modalTitle = '';
+  modalTarget: { index: number, field: 'size' | 'type' | 'machine' } | null = null;
+  sizes: string[] = itemSizes;
+  types: string[] = itemTypes;
+  machines: string[] = itemMachines;
+
+  // Abrir modal para seleccionar campo
+  openModalForField(index: number, field: 'size' | 'type' | 'machine') {
+    this.modalTarget = { index, field };
+    if (field === 'size') {
+      this.modalList = this.sizes;
+      this.modalTitle = 'Seleccionar Tamaño';
+    } else if (field === 'type') {
+      this.modalList = this.types;
+      this.modalTitle = 'Seleccionar Tipo';
+    } else if (field === 'machine') {
+      this.modalList = this.machines;
+      this.modalTitle = 'Seleccionar Máquina';
+    }
+    this.modalOpen = true;
+  }
+
+  // Manejar selección del modal
+  onModalSelect(value: string) {
+    if (this.modalTarget) {
+      const { index, field } = this.modalTarget;
+      this.ticketData.saleDetails[index][field] = value;
+      this.modalOpen = false;
+      this.modalTarget = null;
+    }
+  }
+
+  // Cerrar modal
+  onModalClosed() {
+    this.modalOpen = false;
+    this.modalTarget = null;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleF1(event: KeyboardEvent) {
+    if (event.key === 'F1') {
+      event.preventDefault();
+    }
+  }
 
   includeIGV = true; // Checkbox para incluir IGV
 
@@ -25,21 +75,34 @@ export default class Tickets {
     client: 'JHON WICK',
     methodOfPayment: 'YAPE',
     creationDate: new Date(),
-    saleDetails: [
-      { description: 'Impresión 13"x19" COUCHE 300GR', quantity: 5, price: 2, total: 10.00 },
-      { description: 'Impresión 13"x19" OPALINA 250GR', quantity: 100, price: 2.50, total: 250 }
-    ],
+    saleDetails: [],
     totalPrice: 0,
     advance: 0,
     discount: 0,
     igv: 0,
+    saldo: 0,
     finalAmount: 0,
     printDate: new Date(),
   };
 
+
   constructor() {
     this.calculateTotals();
   }
+
+  onMaterialInputKeydown(event: KeyboardEvent) {
+    if (event.key === 'F1') {
+      event.preventDefault();
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeydownGlobal(event: KeyboardEvent) {
+    if (event.key === 'F1') {
+      event.preventDefault();
+    }
+  }
+
 
   printTicket(): void {
     this.ticketData.printDate = new Date();
@@ -101,7 +164,9 @@ export default class Tickets {
   // Methods for managing sale details
   addSaleItem(): void {
     this.ticketData.saleDetails.push({
-      description: '',
+      size: '',
+      type: '',
+      machine: '',
       quantity: 1,
       price: 0,
       total: 0
@@ -115,7 +180,7 @@ export default class Tickets {
 
   updateSaleItem(index: number, field: keyof TicketItem, value: string | number): void {
     const item = this.ticketData.saleDetails[index];
-    if (field === 'description') {
+    if (field === 'size' || field === 'type' || field === 'machine') {
       item[field] = value as string;
     } else if (field === 'quantity' || field === 'price') {
       const numValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
@@ -126,7 +191,6 @@ export default class Tickets {
     }
     this.calculateTotals();
   }
-
   calculateTotals(): void {
     // Calculate total price from sale details
     this.ticketData.totalPrice = this.ticketData.saleDetails.reduce((sum, item) => sum + item.total, 0);
@@ -136,6 +200,9 @@ export default class Tickets {
 
     // Calculate final amount (total - discount + IGV - advance)
     this.ticketData.finalAmount = this.ticketData.totalPrice - this.ticketData.discount + this.ticketData.igv - this.ticketData.advance;
+
+    // Calculate saldo (monto pendiente a pagar)
+    this.ticketData.saldo = this.ticketData.totalPrice - this.ticketData.advance;
   }
 
   // Update methods for form fields

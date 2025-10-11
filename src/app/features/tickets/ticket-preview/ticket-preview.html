@@ -40,7 +40,7 @@
     @for (item of ticketData.saleDetails; track $index) {
       <div class="grid grid-cols-4 text-xs">
         <span class="col-span-4 text-left">{{
-          item.description.toUpperCase() || 'Sin descripción'
+          item.size ? item.size.toUpperCase() : 'Sin descripción'
         }}</span>
         <span class="col-start-2 text-right">x{{ item.quantity }}</span>
         <span class="col-start-3 text-right">{{ item.price.toFixed(2) }}</span>
@@ -60,6 +60,10 @@
     <div class="flex justify-between text-xs">
       <span class="font-bold">DESCUENTO:</span>
       <span class="font-bold">S/ {{ ticketData.discount.toFixed(2) }}</span>
+    </div>
+    <div class="flex justify-between text-xs">
+      <span class="font-bold">SALDO:</span>
+      <span class="font-bold"> S/ {{ ticketData.saldo.toFixed(2) }} </span>
     </div>
     @if (includeIGV) {
       <div class="flex justify-between text-xs">
