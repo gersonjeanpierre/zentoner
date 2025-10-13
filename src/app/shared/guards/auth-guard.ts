@@ -8,8 +8,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
   const { data } = await authService.getSession();
 
-  console.log({ data });
-
   if (!data.session) {
     router.navigateByUrl('/auth/log-in');
   }
