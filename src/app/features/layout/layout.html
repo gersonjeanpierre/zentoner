@@ -1,79 +1,107 @@
-<div class="drawer lg:drawer-open min-h-screen">
+<div class="drawer drawer-open min-h-screen">
   <input id="erp-drawer" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content flex flex-col">
-    <!-- Navbar -->
-    <div class="w-full navbar bg-base-200 lg:hidden">
-      <div class="flex-none">
-        <label for="erp-drawer" class="btn btn-square btn-ghost drawer-button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </label>
-      </div>
-      <div class="flex-1 px-2 text-xl font-bold">ERP</div>
-    </div>
     <!-- Usuario y sesión activa -->
-    <div
-      id="user-session"
-      class="flex items-center gap-4 p-2 bg-base-100 border-b border-base-200 sticky top-0 z-10"
-    >
-      @if (user()) {
-        <div class="flex items-center gap-2">
-          <span class="font-semibold">Usuario:</span>
-          <span class="badge badge-neutral">{{ user().email }}</span>
+    <div class="sticky top-0 z-10 pr-[13px] pl-2 pt-3 pb-1 bg-base-200">
+      <div class="card card-compact bg-base-100 border border-base-200 shadow-sm">
+        <div class="card-body py-2 px-4 flex flex-row items-center gap-4">
+          <span class="card-title text-base font-semibold mb-0">Usuario</span>
+          @if (user()) {
+            <span class="badge badge-neutral">{{ user().email }}</span>
+          }
+          <span class="divider divider-horizontal h-6 mx-2"></span>
+          <span class="card-title text-base font-semibold mb-0">Sesión</span>
+          @if (session()) {
+            <span class="badge badge-success">{{ session() }}</span>
+          }
         </div>
-      }
-      @if (session()) {
-        <div class="flex items-center gap-2">
-          <span class="font-semibold">Sesión activa:</span>
-          <span class="badge badge-success">{{ session() }}</span>
-        </div>
-      }
+      </div>
     </div>
     <!-- Main content -->
-    <div id="main-content" class="p-4 flex-1 bg-neutral-100">
+    <div id="main-content" class="pt-1.5 pb-3 flex-1 bg-neutral-100">
       <router-outlet></router-outlet>
     </div>
   </div>
-  <div class="drawer-side">
-    <label for="erp-drawer" class="drawer-overlay"></label>
-    <aside class="menu p-4 w-52 min-h-full bg-gray-200 text-base-content">
-      <app-logo-laser-veloz class="mb-4" [fontSize]="fontSize()" />
-      <nav aria-label="ERP navigation" class="text-lg font-semibold">
-        <ul>
+  <!-- Sidebar -->
+  <div
+    class="drawer-side is-drawer-close:overflow-visible bg-base-200 card card-compact py-3 pl-3 pr-1.5"
+  >
+    <div class="card-body bg-base-100 min-h-full shadow-md rounded-lg p-0 flex flex-col h-full">
+      <label for="erp-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+      <div class="is-drawer-close:w-20 is-drawer-open:w-[190px] flex flex-col items-start h-full">
+        <ul class="menu grow">
+          <app-logo-laser-veloz class="mb-4 mt-2 is-drawer-close:hidden" [fontSize]="fontSize()" />
           @for (item of menuItems; track $index) {
             @if (item.name !== 'Cerrar sesión') {
-              <li class="py-1">
-                <a
+              <li>
+                <span
+                  class="group is-drawer-close:tooltip is-drawer-close:tooltip-right w-full is-drawer-close:flex is-drawer-close:justify-center transition-all duration-200 is-drawer-close:bg-transparent my-0.5 is-drawer-close:hover:bg-neutral is-drawer-close:text-primary-content rounded-full is-drawer-open:px-3 is-drawer-close:px-0 py-[12px] is-drawer-open:hover:bg-neutral"
+                  [attr.data-tip]="item.name"
                   [class.menu-active]="activeMenu() === item.name"
                   (click)="activeMenu.set(item.name)"
                   routerLink="{{ item.routeLink }}"
-                  ><span class="{{ item.icon }} w-5"></span>
-                  {{ item.name }}
-                </a>
+                >
+                  <span
+                    class="flex items-center justify-center transition-all duration-200 rounded-full is-drawer-close:size-9 size-7 group-hover:bg-neutral group-hover:text-primary-content group-hover:opacity-100 is-drawer-open:bg-transparent is-drawer-open:group-hover:bg-neutral"
+                    [class.bg-gray-500]="activeMenu() !== item.name"
+                    [class.opacity-80]="activeMenu() !== item.name"
+                    [class.bg-neutral]="activeMenu() === item.name"
+                    [class.text-primary-content]="activeMenu() === item.name"
+                  >
+                    <span
+                      class="{{ item.icon }} text-xl h-6 w-6 transition-all duration-200"
+                    ></span>
+                  </span>
+                  <span
+                    class="is-drawer-close:hidden font-semibold transition-all duration-200 group-hover:text-primary-content"
+                    >{{ item.name }}</span
+                  >
+                </span>
               </li>
             } @else {
-              <li class="py-1">
-                <a [class.menu-active]="activeMenu() === item.name" (click)="logOut()"
-                  ><span class="{{ item.icon }} w-5"></span>
-                  {{ item.name }}
-                </a>
+              <li>
+                <button
+                  class="is-drawer-close:tooltip is-drawer-close:tooltip-right w-full text-left flex items-center gap-2 px-2 py-2 transition-all duration-200"
+                  [attr.data-tip]="'Cerrar sesión'"
+                  [class.menu-active]="activeMenu() === item.name"
+                  (click)="logOut()"
+                >
+                  <span
+                    class="flex items-center justify-center transition-all duration-200 bg-transparent is-drawer-close:bg-error is-drawer-close:text-error-content rounded-full is-drawer-close:size-11 size-7"
+                  >
+                    <span
+                      class="{{
+                        item.icon
+                      }} text-xl is-drawer-close:text-2xl transition-all duration-200"
+                    ></span>
+                  </span>
+                  <span class="is-drawer-close:hidden font-semibold transition-all duration-200">{{
+                    item.name
+                  }}</span>
+                </button>
               </li>
             }
           }
         </ul>
-      </nav>
-    </aside>
+        <!-- Botón para abrir/cerrar el menú Drawer al final -->
+        <div
+          class="m-2 menu is-drawer-close:tooltip is-drawer-close:tooltip-right mt-auto"
+          [attr.data-tip]="'Open'"
+        >
+          <label
+            for="erp-drawer"
+            class="btn btn-ghost btn-circle drawer-button is-drawer-open:rotate-y-180 flex items-center w-full"
+          >
+            <span
+              class="flex items-center justify-center transition-all duration-200 is-drawer-close:bg-success is-drawer-close:text-primary-content rounded-full size-11 bg-error text-primary-content"
+            >
+              <span
+                class="icon-[icon-park-outline--double-right] text-2xl transition-all duration-200"
+              ></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

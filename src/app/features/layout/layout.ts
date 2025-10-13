@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from '@features/auth/auth-service';
 import { LogoLaserVeloz } from '@shared/components/logo-laser-veloz/logo-laser-veloz';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './layout.css'
 })
 export default class Layout implements OnInit {
-
   private authService = inject(AuthService);
   private router = inject(Router);
   user = signal<any | null>(null);
@@ -63,6 +62,7 @@ export default class Layout implements OnInit {
     }
   ]
 
+
   async ngOnInit() {
     // Obtener usuario y sesión activa de Supabase
     try {
@@ -73,6 +73,24 @@ export default class Layout implements OnInit {
     } catch (e) {
       this.user.set(null);
       this.session.set(null);
+    }
+
+    // Set active menu based on current route
+    this.setActiveMenuByRoute(this.router.url);
+
+    // Listen to route changes
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.setActiveMenuByRoute(event.urlAfterRedirects);
+      }
+    });
+  }
+
+  setActiveMenuByRoute(url: string) {
+    // Find the menu item whose routeLink matches the start of the url
+    const found = this.menuItems.find(item => url.startsWith(item.routeLink));
+    if (found) {
+      this.activeMenu.set(found.name);
     }
   }
 
