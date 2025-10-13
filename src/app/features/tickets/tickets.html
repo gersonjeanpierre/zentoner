@@ -1,6 +1,6 @@
 <div class="relative h-auto">
   <!-- Formulario de inputs - CON SCROLL INTERNO -->
-  <div class="pr-[340px] overflow-y-auto h-auto px-2 pb-10 pt-1">
+  <div class="pr-[356px] overflow-y-auto h-auto pl-2 pb-10 pt-1">
     <div class="card bg-base-100 shadow-sm">
       <div class="card-body">
         <h2 class="card-title text-2xl mb-4">Generar Ticket</h2>
@@ -129,47 +129,41 @@
 
           <!-- Adelanto y Descuento mejorados -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div class="form-control w-full">
-              <label class="label">
-                <span class="label-text font-semibold">Adelanto</span>
-              </label>
-              <div class="join w-full">
-                <span
-                  class="join-item input input-neutral input-md bg-base-200 pointer-events-none w-12"
-                  >💸</span
-                >
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend text-lg">Adelanto</legend>
+              <label class="input input-neutral cursor-pointer">
+                <span class="icon-[noto--dollar-banknote] h-7 w-7"></span>
                 <input
                   type="number"
+                  class="grow cursor-pointer"
+                  placeholder="Ingrese adelanto"
                   [(ngModel)]="ticketData.advance"
+                  autocomplete="off"
                   (ngModelChange)="updateAdvance($event)"
-                  class="join-item input input-neutral input-md w-full cursor-pointer focus:outline-none"
                   step="0.01"
                   min="0"
                   placeholder="0.00"
                 />
-              </div>
-            </div>
-            <div class="form-control w-full">
-              <label class="label">
-                <span class="label-text font-semibold">Descuento</span>
               </label>
-              <div class="join w-full">
-                <span
-                  class="join-item input input-neutral input-md bg-base-200 pointer-events-none w-12"
-                >
-                  <span class="icon-[noto--artist] h-6 w-6"></span>
-                </span>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend text-lg">Descuento</legend>
+              <label class="input input-neutral cursor-pointer">
+                <span class="icon-[noto--label] h-7 w-7"></span>
                 <input
                   type="number"
+                  class="grow cursor-pointer"
+                  placeholder="Ingrese descuento"
                   [(ngModel)]="ticketData.discount"
+                  autocomplete="off"
                   (ngModelChange)="updateDiscount($event)"
-                  class="join-item input input-neutral input-md w-full cursor-pointer focus:outline-none"
                   step="0.01"
                   min="0"
                   placeholder="0.00"
                 />
-              </div>
-            </div>
+              </label>
+            </fieldset>
           </div>
 
           <!-- Checkbox IGV -->
@@ -232,7 +226,7 @@
     </div>
 
     <!-- Vista previa del ticket - FIJO A LA DERECHA SIN SCROLL -->
-    <div class="fixed top-16 right-2 w-[340px] overflow-hidden px-[6px] pb-10">
+    <div class="fixed top-18.5 right-2 w-[340px] overflow-hidden px-[6px] pb-10">
       <div class="card bg-white shadow-lg">
         <div class="card-body h-full w-full px-0">
           <app-ticket-preview
