@@ -35,7 +35,7 @@
             @if (item.name !== 'Cerrar sesión') {
               <li>
                 <span
-                  class="group is-drawer-close:tooltip is-drawer-close:tooltip-right w-full is-drawer-close:flex is-drawer-close:justify-center transition-all duration-200 is-drawer-close:bg-transparent my-0.5 is-drawer-close:hover:bg-neutral is-drawer-close:text-primary-content rounded-full is-drawer-open:px-3 is-drawer-close:px-0 py-[12px] is-drawer-open:hover:bg-neutral"
+                  class="group is-drawer-close:tooltip is-drawer-close:tooltip-right w-full is-drawer-close:flex is-drawer-close:justify-center transition-all duration-200 my-0.5 is-drawer-close:hover:bg-neutral is-drawer-close:text-primary-content rounded-full is-drawer-open:px-3 is-drawer-close:px-0 py-[12px] is-drawer-open:hover:bg-neutral"
                   [attr.data-tip]="item.name"
                   [class.menu-active]="activeMenu() === item.name"
                   (click)="activeMenu.set(item.name)"
