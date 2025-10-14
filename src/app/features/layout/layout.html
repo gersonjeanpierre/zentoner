@@ -61,23 +61,30 @@
             } @else {
               <li>
                 <button
-                  class="is-drawer-close:tooltip is-drawer-close:tooltip-right w-full text-left flex items-center gap-2 px-2 py-2 transition-all duration-200"
+                  class="group is-drawer-close:tooltip is-drawer-close:tooltip-right w-full text-left flex items-center gap-2 px-2 py-2 transition-all duration-200 my-0.5 is-drawer-close:hover:bg-error is-drawer-close:text-primary-content is-drawer-open:px-3 is-drawer-open:hover:bg-error"
                   [attr.data-tip]="'Cerrar sesión'"
                   [class.menu-active]="activeMenu() === item.name"
                   (click)="logOut()"
                 >
                   <span
-                    class="flex items-center justify-center transition-all duration-200 bg-transparent is-drawer-close:bg-error is-drawer-close:text-error-content rounded-full is-drawer-close:size-11 size-7"
+                    class="flex items-center justify-center transition-all duration-200 rounded-full is-drawer-close:size-11 size-7 group-hover:bg-error group-hover:text-primary-content group-hover:opacity-100 is-drawer-open:bg-transparent is-drawer-open:group-hover:bg-error"
+                    [class.bg-red-300]="activeMenu() !== item.name"
+                    [class.opacity-90]="activeMenu() !== item.name"
+                    [class.bg-error]="activeMenu() === item.name"
+                    [class.text-primary-content]="activeMenu() === item.name"
                   >
                     <span
                       class="{{
                         item.icon
-                      }} text-xl is-drawer-close:text-2xl transition-all duration-200"
+                      }} text-xl is-drawer-close:text-2xl transition-all duration-200 group-hover:text-primary-content"
+                      [class.text-primary-content]="activeMenu() === item.name"
                     ></span>
                   </span>
-                  <span class="is-drawer-close:hidden font-semibold transition-all duration-200">{{
-                    item.name
-                  }}</span>
+                  <span
+                    class="is-drawer-close:hidden font-semibold transition-all duration-200 group-hover:text-primary-content"
+                  >
+                    {{ item.name }}
+                  </span>
                 </button>
               </li>
             }
