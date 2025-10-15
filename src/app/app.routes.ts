@@ -30,6 +30,10 @@ export const routes: Routes = [
         loadComponent: () => import('@features/tickets/tickets')
       },
       {
+        path: 'configuracion',
+        loadComponent: () => import('@features/settings/settings')
+      },
+      {
         path: '**',
         redirectTo: 'dashboard'
       }

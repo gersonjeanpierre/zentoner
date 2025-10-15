@@ -26,14 +26,30 @@ export default class SignUp {
       Validators.required,
       Validators.minLength(6),
       Validators.maxLength(20),
-    ])
+    ]),
+    firstName: this.fb.control(null, [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(35),
+    ]),
+    lastName: this.fb.control(null, [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(80),
+    ]),
   })
 
   async onSubmit() {
     if (this.signUpForm.invalid) return;
     const authResponse = await this.authService.signUp({
       email: this.signUpForm.value.email ?? '',
-      password: this.signUpForm.value.password ?? ''
+      password: this.signUpForm.value.password ?? '',
+      options: {
+        data: {
+          first_name: this.signUpForm.value.firstName ?? '',
+          last_name: this.signUpForm.value.lastName ?? '',
+        }
+      }
     })
     console.log({ authResponse })
 
