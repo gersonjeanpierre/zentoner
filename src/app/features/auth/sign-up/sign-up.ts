@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SignUpForm } from '@core/auth/sign-up-model';
 import { AuthService } from '../auth-service';
 import { AlertModal } from '@shared/components/alert-modal/alert-modal';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sign-up',
@@ -13,10 +14,12 @@ import { AlertModal } from '@shared/components/alert-modal/alert-modal';
 })
 export default class SignUp {
 
-  private fb = inject(FormBuilder)
-  private authService = inject(AuthService)
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private translate = inject(TranslateService);
 
   // Modal de alerta
+  isLoading = signal(false);
   showAlertModal = signal(false);
   alertMessage = signal('');
   alertTitle = signal('');
@@ -50,6 +53,7 @@ export default class SignUp {
 
   async onSubmit() {
     if (this.signUpForm.invalid) return;
+    this.isLoading.set(true);
     const { data, error } = await this.authService.signUp({
       email: this.signUpForm.value.email ?? '',
       password: this.signUpForm.value.password ?? '',
@@ -61,11 +65,12 @@ export default class SignUp {
       }
     });
     console.log({ data, error });
+    this.isLoading.set(false);
     if (error) {
       this.showModal.set(true);
 
       this.alertTitle.set('Error');
-      this.alertMessage.set(error.message);
+      this.alertMessage.set(this.getErrorTranslation(error.message));
       this.alertType.set('error');
     } else {
       this.showModal.set(true);
@@ -74,5 +79,10 @@ export default class SignUp {
       this.alertMessage.set('Tu cuenta ha sido creada correctamente.');
       this.alertType.set('success');
     }
+  }
+
+  private getErrorTranslation(message: string): string {
+    // Busca la traducción exacta, si no existe usa el genérico
+    return this.translate.instant(`auth.errors.${message}`) || this.translate.instant('auth.errors.generic');
   }
 }

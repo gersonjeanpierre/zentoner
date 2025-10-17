@@ -1,4 +1,4 @@
-<main class="flex justify-center items-center min-h-screen bg-base-200">
+<main class="flex justify-center items-center h-full bg-base-200">
   <div class="card bg-base-100 w-80 shadow-lg">
     <form [formGroup]="signUpForm">
       <div class="card-body items-center text-center gap-4">
@@ -115,16 +115,28 @@
         </div>
 
         <div class="card-actions">
-          <button class="btn btn-neutral" (click)="onSubmit()">Registrar</button>
+          <button
+            class="btn btn-neutral"
+            [disabled]="isLoading() || signUpForm.invalid"
+            (click)="onSubmit()"
+          >
+            @if (isLoading()) {
+              <span class="loading loading-spinner loading-sm"></span>
+              Registrando...
+            } @else {
+              Registrar
+            }
+          </button>
         </div>
       </div>
     </form>
   </div>
-
+</main>
+@if (showModal()) {
   <app-alert-modal
     [title]="alertTitle()"
     [message]="alertMessage()"
     [type]="alertType()"
-    [show]="showModal()"
+    (closed)="showModal.set(false)"
   />
-</main>
+}

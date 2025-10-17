@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-alert-modal',
@@ -9,13 +9,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class AlertModal {
   @Input() title = '';
   @Input() message = '';
-  @Input() show: boolean = false;
   @Input() type: 'info' | 'warning' | 'error' | 'success' = 'success';
 
   @Output() closed = new EventEmitter<void>();
 
-  close() {
-
+  onClose() {
     this.closed.emit();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleEsc(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.onClose();
+    }
   }
 }
