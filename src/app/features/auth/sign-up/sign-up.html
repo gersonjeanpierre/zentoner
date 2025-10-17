@@ -120,4 +120,11 @@
       </div>
     </form>
   </div>
+
+  <app-alert-modal
+    [title]="alertTitle()"
+    [message]="alertMessage()"
+    [type]="alertType()"
+    [show]="showModal()"
+  />
 </main>
