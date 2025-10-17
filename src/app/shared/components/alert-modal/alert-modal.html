@@ -1,0 +1,17 @@
+@if (show) {
+  <div
+    class="modal-box border-l-4"
+    [ngClass]="{
+      'border-info': type === 'info',
+      'border-success': type === 'success',
+      'border-warning': type === 'warning',
+      'border-error': type === 'error',
+    }"
+  >
+    <h3 class="font-bold text-lg mb-2">{{ title }}</h3>
+    <p class="mb-4">{{ message }}</p>
+    <div class="modal-action">
+      <button class="btn btn-primary" (click)="close()">Cerrar</button>
+    </div>
+  </div>
+}
