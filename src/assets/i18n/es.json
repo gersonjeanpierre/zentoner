@@ -1,0 +1,9 @@
+{
+  "auth": {
+    "errors": {
+      "User already registered": "El usuario ya está registrado.",
+      "Invalid email": "El correo electrónico no es válido.",
+      "Generic error": "Ha ocurrido un error inesperado."
+    }
+  }
+}
