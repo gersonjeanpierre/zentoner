@@ -5,14 +5,14 @@ import { SignUpForm } from '@core/auth/sign-up-model';
 import { AuthService } from '../auth-service';
 import { AlertModal } from '@shared/components/alert-modal/alert-modal';
 import { TranslateService } from '@ngx-translate/core';
-import { rolesUser } from '@shared/mockup';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [LogoLaserVeloz, ReactiveFormsModule, AlertModal],
-  templateUrl: './sign-up.html'
+  imports: [LogoLaserVeloz, ReactiveFormsModule, AlertModal, NgClass],
+  templateUrl: './sign-up.html',
 })
-export default class SignUp {
+export default class SignUpBack {
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -25,7 +25,6 @@ export default class SignUp {
   alertTitle = signal('');
   showModal = signal(false);
   alertType = signal<'info' | 'warning' | 'error' | 'success'>('success');
-  availableRoles = signal(rolesUser);
 
   signUpForm = this.fb.group<SignUpForm>({
     email: this.fb.control(null, [
@@ -50,70 +49,37 @@ export default class SignUp {
       Validators.maxLength(80),
     ]),
     selectedRoles: this.fb.control([], Validators.required)
-  });
+  })
 
-  // 2. Gestionar el cambio en los Checkboxes
-  onRoleChange(roleName: string, isChecked: boolean) {
-    const selectedRolesControl = this.signUpForm.controls.selectedRoles;
-    let currentRoles = selectedRolesControl?.value || [];
-
-    if (isChecked) {
-      currentRoles = [...currentRoles, roleName];
-    } else {
-      currentRoles = currentRoles.filter(r => r !== roleName);
-    }
-
-    if (selectedRolesControl) selectedRolesControl.setValue(currentRoles);
-
-    if (selectedRolesControl) selectedRolesControl.markAsTouched();
-  }
-
-  // 3. Envío Seguro del Formulario
   async onSubmit() {
-    if (this.signUpForm.invalid) {
-      this.signUpForm.markAllAsTouched();
-      this.showAlert('Datos incompletos', 'Complete campos y seleccione al menos un rol.', 'warning');
-      return;
-    }
-
+    if (this.signUpForm.invalid) return;
     this.isLoading.set(true);
-    const formValue = this.signUpForm.value;
-
-    // 🚨 Payload para la Edge Function
-    const payload = {
-      email: formValue.email ?? '',
-      password: formValue.password ?? '',
-      firstName: formValue.firstName ?? '',
-      lastName: formValue.lastName ?? '',
-      authEmail: formValue.email ?? '',
-      initialRoleNames: formValue.selectedRoles ?? [], // Array de roles
-    };
-
-    try {
-      // 🚨 Llamada al servicio que usa HttpClient y la Edge Function
-      const result = await this.authService.registerEmployeeSecurely(payload);
-
-      this.showAlert(
-        '¡Registro exitoso!',
-        `La cuenta del empleado ha sido creada con éxito. ID: ${result.user_id}.`,
-        'success'
-      );
-      this.signUpForm.reset();
-      this.signUpForm.controls.selectedRoles?.setValue([]); // Limpiar selección
-
-    } catch (error: any) {
-      const errorMessage = error.message || 'GENERIC_SERVER_ERROR';
-
+    const { data, error } = await this.authService.signUp({
+      email: this.signUpForm.value.email ?? '',
+      password: this.signUpForm.value.password ?? '',
+      options: {
+        data: {
+          first_name: this.signUpForm.value.firstName ?? '',
+          last_name: this.signUpForm.value.lastName ?? '',
+        }
+      }
+    });
+    console.log({ data, error });
+    this.isLoading.set(false);
+    if (error) {
       this.showAlert(
         '¡Error al registrar!',
-        // Mejor manejo de errores: traducimos mensajes conocidos
-        this.getErrorTranslation(errorMessage),
+        this.getErrorTranslation(error.message),
         'error'
-      );
-
-    } finally {
-      this.isLoading.set(false);
+      )
+      return;
     }
+    this.showAlert(
+      '¡Registro exitoso!',
+      'La cuenta del empleado ha sido creada exitosamente.',
+      'success'
+    );
+    this.signUpForm.reset();
   }
 
   private showAlert(title: string, message: string, type: 'info' | 'warning' | 'error' | 'success') {

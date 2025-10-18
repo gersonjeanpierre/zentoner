@@ -1,137 +1,117 @@
-<main class="flex justify-center items-center h-full bg-base-200">
-  <div class="card bg-base-100 w-80 shadow-lg">
-    <form [formGroup]="signUpForm">
-      <div class="card-body items-center text-center gap-4">
-        <app-logo-laser-veloz />
-        <h2 class="card-title">Registro de Usuario</h2>
+<div class="flex flex-col items-center justify-center h-full bg-base-200 p-4">
+  <app-logo-laser-veloz class="mb-8"></app-logo-laser-veloz>
 
-        <div class="w-full">
-          <label class="input validator">
-            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <g
-                stroke-linejoin="round"
-                stroke-linecap="round"
-                stroke-width="2.5"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </g>
-            </svg>
-            <input
-              id="email"
-              formControlName="email"
-              type="text"
-              required
-              placeholder="Email"
-              minlength="3"
-              maxlength="40"
-              autocomplete="new-email"
-            />
-          </label>
-        </div>
+  <div class="card w-full max-w-lg bg-base-100 shadow-xl p-8">
+    <h2 class="text-2xl font-bold text-center mb-6">Registro de Nuevo Empleado</h2>
+    <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      <!-- Email -->
+      <label class="form-control w-full mb-4">
+        <span class="label-text">Email de Autenticación</span>
+        <input
+          type="email"
+          placeholder="ejemplo@zentoner.com"
+          class="input input-bordered w-full"
+          formControlName="email"
+          autocomplete="username"
+        />
+        @if (signUpForm.controls.email.invalid && signUpForm.controls.email.touched) {
+          <span class="label-text-alt text-error">El email es requerido y debe ser válido.</span>
+        }
+      </label>
 
-        <div class="w-full">
-          <label class="input validator">
-            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <g
-                stroke-linejoin="round"
-                stroke-linecap="round"
-                stroke-width="2.5"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
-                ></path>
-                <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-              </g>
-            </svg>
-            <input
-              id="password"
-              formControlName="password"
-              type="password"
-              required
-              placeholder="Contraseña"
-              minlength="6"
-              maxlength="20"
-              autocomplete="new-password"
-            />
-          </label>
-        </div>
-
-        <div class="w-full">
-          <label class="input validator">
-            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <g
-                stroke-linejoin="round"
-                stroke-linecap="round"
-                stroke-width="2.5"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </g>
-            </svg>
-            <input
-              id="firstName"
-              formControlName="firstName"
-              type="text"
-              required
-              placeholder="Nombre"
-              minlength="3"
-              maxlength="40"
-              autocomplete="new-firstName"
-            />
-          </label>
-        </div>
-        <div class="w-full">
-          <label class="input validator">
-            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <g
-                stroke-linejoin="round"
-                stroke-linecap="round"
-                stroke-width="2.5"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </g>
-            </svg>
-            <input
-              id="lastName"
-              formControlName="lastName"
-              type="text"
-              required
-              placeholder="Apellido"
-              minlength="3"
-              maxlength="40"
-              autocomplete="new-lastName"
-            />
-          </label>
-        </div>
-
-        <div class="card-actions">
-          <button
-            class="btn btn-neutral"
-            [disabled]="isLoading() || signUpForm.invalid"
-            (click)="onSubmit()"
+      <!-- Contraseña -->
+      <label class="form-control w-full mb-4">
+        <span class="label-text">Contraseña</span>
+        <input
+          type="password"
+          placeholder="Mínimo 6 caracteres"
+          class="input input-bordered w-full"
+          formControlName="password"
+          autocomplete="new-password"
+        />
+        @if (signUpForm.controls.password.invalid && signUpForm.controls.password.touched) {
+          <span class="label-text-alt text-error"
+            >La contraseña es requerida y debe tener al menos 6 caracteres.</span
           >
-            @if (isLoading()) {
-              <span class="loading loading-spinner loading-sm"></span>
-              Registrando...
-            } @else {
-              Registrar
+        }
+      </label>
+
+      <!-- Nombre -->
+      <label class="form-control w-full mb-4">
+        <span class="label-text">Nombre</span>
+        <input
+          type="text"
+          placeholder="Nombre"
+          class="input input-bordered w-full"
+          formControlName="firstName"
+          autocomplete="given-name"
+        />
+      </label>
+
+      <!-- Apellido -->
+      <label class="form-control w-full mb-4">
+        <span class="label-text">Apellido</span>
+        <input
+          type="text"
+          placeholder="Apellido"
+          class="input input-bordered w-full"
+          formControlName="lastName"
+          autocomplete="family-name"
+        />
+      </label>
+
+      <!-- Roles a Asignar -->
+      <div class="form-control w-full mt-2">
+        <span class="label-text font-bold mb-2">Roles a Asignar</span>
+        <div class="grid grid-cols-2 gap-4 p-4 border rounded-box bg-base-200">
+          @if (isLoading()) {
+            <div class="col-span-2 text-center text-info">
+              <span class="loading loading-spinner loading-sm mr-2"></span>
+              Cargando roles...
+            </div>
+          } @else if (availableRoles().length === 0) {
+            <div class="col-span-2 text-center text-warning">No hay roles disponibles.</div>
+          } @else {
+            @for (role of availableRoles(); track role.name) {
+              <label class="form-control cursor-pointer flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  [value]="role.name"
+                  (change)="onRoleChange(role.name, $event.target.checked)"
+                  class="checkbox checkbox-primary"
+                  [checked]="(signUpForm.controls.selectedRoles?.value ?? [])?.includes(role.name)"
+                />
+                <span class="label-text">{{ role.name }}</span>
+              </label>
             }
-          </button>
+          }
         </div>
+        @if (
+          signUpForm.controls.selectedRoles?.invalid && signUpForm.controls.selectedRoles?.touched
+        ) {
+          <span class="label-text-alt text-error mt-2">Debe seleccionar al menos un rol.</span>
+        }
+      </div>
+
+      <!-- Botón de envío -->
+      <div class="form-control mt-6">
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          [disabled]="signUpForm.invalid || isLoading()"
+        >
+          @if (isLoading()) {
+            <span class="loading loading-spinner"></span>
+            Creando Empleado...
+          } @else {
+            Crear Empleado
+          }
+        </button>
       </div>
     </form>
   </div>
-</main>
+</div>
+
 @if (showModal()) {
   <app-alert-modal
     [title]="alertTitle()"
