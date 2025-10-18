@@ -5,4 +5,5 @@ export interface SignUpForm {
   password: FormControl<string | null>;
   firstName?: FormControl<string | null>;
   lastName?: FormControl<string | null>;
+  selectedRoles?: FormControl<string[] | null>;
 }
