@@ -9,7 +9,7 @@
 # environment files
 /src/environments/environment*.ts
 
-/src/db
+/src/db/script.sql
 
 # Node
 /node_modules
