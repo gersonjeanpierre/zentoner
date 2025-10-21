@@ -187,3 +187,27 @@ BEGIN
   -- Opcional: Se podría añadir un log de auditoría aquí mismo
 END;
 $$;
+
+
+-- Vista para seleccionar customers activos (Unión people y customers)
+CREATE OR REPLACE VIEW public.customers_active AS
+SELECT 
+    c.id,
+    p.first_name,
+    p.last_name,
+    p.legal_name,
+    p.email,
+    p.phone,
+    p.dni,
+    p.ruc,
+    p.ce,
+    p.person_type,
+    c.customer_code,
+    c.customer_type,
+    c.notes,
+    c.created_by,
+    c.is_active
+FROM public.customers c
+JOIN public.people p ON c.id = p.id
+-- El cliente debe estar marcado como activo en customers Y no tener borrado lógico en people
+WHERE c.is_active = TRUE AND p.deleted_at IS NULL;

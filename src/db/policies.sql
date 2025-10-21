@@ -110,12 +110,3 @@ CREATE POLICY "All employees can view active customers"
   FOR SELECT
   TO authenticated
   USING (TRUE);
-
--- ----------------------------------------------------------------------
--- POLÍTICAS ELIMINADAS POR REDUNDANCIA DE RPC:
--- ----------------------------------------------------------------------
--- DROP POLICY IF EXISTS "Authenticated users can insert new customers" ON public.customers;
--- DROP POLICY IF EXISTS "Creator or Admin can update customer details" ON public.customers;
--- DROP POLICY IF EXISTS "Customer Creator can soft delete people record" ON public.people;
--- DROP POLICY IF EXISTS "Authenticated users can read related customer people records" ON public.people; (Reemplazada/Unificada arriba)
--- DROP POLICY IF EXISTS "Enable select for authenticated users on active customers" ON public.customers; (Reemplazada/Unificada arriba)
