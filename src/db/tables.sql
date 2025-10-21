@@ -1,25 +1,11 @@
 -- ######################################################################
 -- # 1. BORRADO CONDICIONAL DE OBJETOS EXISTENTES
 -- ######################################################################
-
--- Limpieza de dependencias: se mantiene tu script original, es robusto.
-DROP TRIGGER IF EXISTS trg_people_set_updated_at ON public.people;
-DROP TRIGGER IF EXISTS trg_employees_set_updated_at ON public.employees;
-DROP TRIGGER IF EXISTS trg_customers_set_updated_at ON public.customers;
-DROP TRIGGER IF EXISTS trg_employee_roles_set_updated_at ON public.employee_roles;
-DROP TRIGGER IF EXISTS trg_roles_set_updated_at ON public.roles;
-
-
 DROP VIEW IF EXISTS public.employees_active CASCADE;
 DROP VIEW IF EXISTS public.customers_active CASCADE;
 DROP VIEW IF EXISTS public.people_active CASCADE;
 
-DROP FUNCTION IF EXISTS public.set_updated_at();
-DROP FUNCTION IF EXISTS public.is_super_admin_check(uuid); 
-DROP FUNCTION IF EXISTS public.is_creator_check(uuid);
-DROP FUNCTION IF EXISTS public.can_manage_employees(uuid);
-
-
+-- Limpieza de tablas previas
 DROP TABLE IF EXISTS public.employee_roles CASCADE;
 DROP TABLE IF EXISTS public.roles CASCADE;
 DROP TABLE IF EXISTS public.customers CASCADE;
@@ -124,8 +110,6 @@ CREATE TABLE public.audit_logs (
    created_at timestamptz NOT NULL DEFAULT now() 
 );
 
-
-
 -- ######################################################################
 -- # 5. INICIALIZACIÓN: CREACIÓN DE ROLES
 -- ######################################################################
@@ -133,12 +117,13 @@ CREATE TABLE public.audit_logs (
 INSERT INTO
   public.roles (name)
 VALUES
-  ('super_admin'),
-  ('gerente'),
-  ('empleado'),
-  ('diseñador'),
-  ('cajero'),
-  ('rrhh'),
-  ('contador'),
-  ('administrador')
+  ('SuperAdmin'),
+  ('Gerente'),
+  ('Empleado'),
+  ('Diseñador'),
+  ('Cajero'),
+  ('RRHH'),
+  ('Contador'),
+  ('Administrador'),
+  ('Programador')
 ON CONFLICT (name) DO NOTHING;

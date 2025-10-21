@@ -13,7 +13,7 @@ BEGIN
     END IF;
 
     -- 2. Obtener IDs de roles necesarios
-    SELECT id INTO super_admin_role_id FROM public.roles WHERE name = 'super_admin';
+    SELECT id INTO super_admin_role_id FROM public.roles WHERE name = 'SuperAdmin';
 
     -- 3. Crear el Perfil en PEOPLE
     -- Asumimos el Auth Email como Email personal/público por simplicidad inicial

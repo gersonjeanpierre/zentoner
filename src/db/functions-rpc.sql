@@ -2,6 +2,20 @@
 -- # 3. FUNCIONES Y TRIGGERS (ADICIONES Y AJUSTES)
 -- ######################################################################
 
+-- Limpieza de triggers previas
+DROP TRIGGER IF EXISTS trg_people_set_updated_at ON public.people;
+DROP TRIGGER IF EXISTS trg_employees_set_updated_at ON public.employees;
+DROP TRIGGER IF EXISTS trg_customers_set_updated_at ON public.customers;
+DROP TRIGGER IF EXISTS trg_employee_roles_set_updated_at ON public.employee_roles;
+DROP TRIGGER IF EXISTS trg_roles_set_updated_at ON public.roles;
+
+-- Limpieza de funciones previas
+DROP FUNCTION IF EXISTS public.set_updated_at();
+DROP FUNCTION IF EXISTS public.is_super_admin_check(uuid); 
+DROP FUNCTION IF EXISTS public.is_creator_check(uuid);
+DROP FUNCTION IF EXISTS public.can_manage_employees(uuid);
+
+
 -- Función set_updated_at (se mantiene)
 CREATE OR REPLACE FUNCTION public.set_updated_at() 
 RETURNS 
@@ -27,12 +41,12 @@ AS $$
     FROM public.employee_roles er
     JOIN public.roles r ON er.role_id = r.id
     WHERE er.employee_id = user_id
-      AND r.name = 'super_admin'
+      AND r.name = 'SuperAdmin'
   );
 $$;
 
 -- FUNCIÓN DE CHECKEO DE ROLES CREADORES (CLAVE para la Edge Function)
--- Verifica si el usuario logueado tiene el rol 'super_admin' O 'administrador'.
+-- Verifica si el usuario logueado tiene el rol 'SuperAdmin' O 'Administrador'.
 CREATE OR REPLACE FUNCTION public.is_creator_check(user_id uuid)
 RETURNS BOOLEAN
 LANGUAGE sql
@@ -43,12 +57,12 @@ AS $$
     FROM public.employee_roles er
     JOIN public.roles r ON er.role_id = r.id
     WHERE er.employee_id = user_id
-      AND r.name IN ('super_admin', 'administrador') -- Se verifica si tiene cualquiera de los roles
+      AND r.name IN ('SuperAdmin', 'Administrador') -- Se verifica si tiene cualquiera de los roles
   );
 $$;
 
 -- FUNCIÓN DE CHECKEO DE ROLES MODIFICADORES DE EMPLEADOS
--- Verifica si el usuario logueado tiene el rol 'super_admin', 'rrhh' O 'contador'.
+-- Verifica si el usuario logueado tiene el rol 'SuperAdmin', 'RRHH' O 'Contador'.
 CREATE OR REPLACE FUNCTION public.can_manage_employees(user_id uuid)
 RETURNS BOOLEAN
 LANGUAGE sql
@@ -59,10 +73,9 @@ AS $$
     FROM public.employee_roles er
     JOIN public.roles r ON er.role_id = r.id
     WHERE er.employee_id = user_id
-      AND r.name IN ('super_admin', 'rrhh', 'contador')
+      AND r.name IN ('SuperAdmin', 'RRHH', 'Contador')
   );
 $$;
-
 
 -- ----------------------------------------------------------------------
 -- RPC: Función de Creación/Actualización (UPSERT) de Customer
@@ -80,7 +93,7 @@ CREATE OR REPLACE FUNCTION public.upsert_customer(
   p_person_type text,
   p_customer_code text,
   p_customer_type text,
-  p_notes text
+  p_notes jsonb
 )
 RETURNS uuid
 LANGUAGE plpgsql
