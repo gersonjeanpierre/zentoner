@@ -58,6 +58,8 @@ export class CustomersService {
       .from('customers_active')
       .select('*');
 
+    console.log('DATA CUSTOMERS ACTIVE:', data);
+
     if (error) {
       console.error('Error al listar customers:', error);
       throw new Error(error.message);

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, FormArray } from '@angular/forms';
 import { CustomersService } from '../customers-service';
 import { CustomerPayload } from '@core/customer/customer-model';
 import { v7 as uuidv7 } from 'uuid';
@@ -14,24 +14,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './customers-create.css'
 })
 export default class CustomersCreate {
-  addNote() {
-    this.notesArray.push(this.fb.group({ key: [''], value: [''] }));
-  }
+  private readonly fb = inject(FormBuilder);
+  private readonly customersService = inject(CustomersService);
+  private readonly router = inject(Router);
 
-  removeNote(i: number) {
-    this.notesArray.removeAt(i);
-  }
-  private fb = inject(FormBuilder);
-  private customersService = inject(CustomersService);
-  private router = inject(Router);
-
-  loading = signal(false);
-  error = signal<string | null>(null);
-  success = signal(false);
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly success = signal(false);
 
   form = this.fb.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
+    firstName: [''],
+    lastName: [''],
     legalName: [''],
     email: ['', [Validators.email]],
     phone: ['', [Validators.required]],
@@ -41,27 +34,37 @@ export default class CustomersCreate {
     personType: [''],
     customerCode: [''],
     customerType: [''],
-    notes: this.fb.array([])
+    notes: this.fb.array<FormGroup>([])
   });
 
   get notesArray() {
-    return this.form.get('notes') as import('@angular/forms').FormArray;
+    return this.form.get('notes') as FormArray<FormGroup>;
   }
 
+  addNote() {
+    this.notesArray.push(this.fb.group({ key: [''], value: [''] }));
+  }
 
-  async onSubmit() {
+  removeNote(index: number) {
+    this.notesArray.removeAt(index);
+  }
 
-    if (this.form.invalid) return;
-    this.loading.set(true);
-    this.error.set(null);
-    const raw = this.form.value;
-    // Ajusta los valores para que coincidan con el modelo
-    // Serializa notes FormArray a objeto clave/valor
+  private serializeNotes(): Record<string, string> | null {
     const notesArr = this.notesArray.value as Array<{ key: string; value: string }>;
     const notesObj: Record<string, string> = {};
-    for (const n of notesArr) {
-      if (n.key && n.key.trim()) notesObj[n.key.trim()] = n.value;
+    for (const { key, value } of notesArr) {
+      if (key && key.trim()) notesObj[key.trim()] = value;
     }
+    return Object.keys(notesObj).length ? notesObj : null;
+  }
+
+  async onSubmit(): Promise<void> {
+    if (this.form.invalid) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    const raw = this.form.value;
     const customer: CustomerPayload = {
       id: uuidv7(),
       firstName: raw.firstName ?? '',
@@ -75,7 +78,7 @@ export default class CustomersCreate {
       personType: (raw.personType || '').toLowerCase() as 'juridico' | 'natural',
       customerCode: raw.customerCode || null,
       customerType: (raw.customerType || '').toLowerCase() as 'nuevo' | 'frecuente' | 'imprentero_nuevo' | 'imprentero_frecuente',
-      notes: Object.keys(notesObj).length ? notesObj : null
+      notes: this.serializeNotes()
     };
     try {
       await this.customersService.upsertCustomer(customer);
@@ -83,7 +86,8 @@ export default class CustomersCreate {
       setTimeout(() => this.router.navigate(['/clientes']), 800);
     } catch (e: any) {
       this.error.set(e.message || 'Error al crear cliente');
+    } finally {
+      this.loading.set(false);
     }
-    this.loading.set(false);
   }
 }

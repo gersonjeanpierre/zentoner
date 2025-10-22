@@ -17,19 +17,15 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('@features/dashboard/dashboard')
       },
+
       {
         path: 'clientes',
-        loadComponent: () => import('./features/customers/create/customers-create').then(m => m.default)
-
+        children: [
+          { path: '', loadComponent: () => import('./features/customers/list/customers-list').then(m => m.default) },
+          { path: 'create', loadComponent: () => import('./features/customers/create/customers-create').then(m => m.default) },
+          // { path: 'edit/:id', loadComponent: () => import('./features/customers/edit/customers-edit').then(m => m.default) },
+        ]
       },
-      // {
-      //   path: 'clientes',
-      //   children: [
-      //     { path: '', loadComponent: () => import('./features/customers/list/customers-list').then(m => m.default) },
-      //     { path: 'create', loadComponent: () => import('./features/customers/create/customers-create').then(m => m.default) },
-      //     { path: 'edit/:id', loadComponent: () => import('./features/customers/edit/customers-edit').then(m => m.default) },
-      //   ]
-      // },
       {
         path: 'tickets',
         loadComponent: () => import('@features/tickets/tickets')

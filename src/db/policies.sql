@@ -75,8 +75,7 @@ CREATE POLICY "Authenticated users can read their own or customer people records
   FOR SELECT
   TO authenticated
   USING (
-    id = auth.uid() OR -- Ve su propio registro (si es empleado)
-    EXISTS (SELECT 1 FROM public.customers c WHERE c.id = people.id) -- Ve el registro de una persona que es un customer
+    id = auth.uid() 
   );
 
 
@@ -103,10 +102,3 @@ CREATE POLICY "All authenticated users can select active customers"
 -- *** RLS ADICIONAL: customers_active VIEW ***
 -- La vista ya filtra por activo/no borrado.
 ALTER VIEW public.customers_active SET (security_barrier = true);
--- Política de LECTURA: Todos los empleados autenticados pueden ver clientes activos.
-DROP POLICY IF EXISTS "All employees can view active customers" ON public.customers_active;
-CREATE POLICY "All employees can view active customers"
-  ON public.customers_active
-  FOR SELECT
-  TO authenticated
-  USING (TRUE);

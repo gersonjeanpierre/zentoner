@@ -79,7 +79,7 @@
     "@types/humps": "^2.0.6",
     "@types/jasmine": "~5.1.12",
     "daisyui": "^5.3.7",
-    "electron": "^38.3.0",
+    "electron": "^38.4.0",
     "electron-builder": "^26.0.12",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.4",
