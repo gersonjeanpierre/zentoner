@@ -487,8 +487,6 @@ ALTER VIEW sales.active_customers SET (security_barrier = true);
 
 -- POLÍTICAS REFINADAS
 -- CORE.SHOPS: Se permite a todos los empleados ver los locales (metadato).
-DROP POLICY "Employees only can access app data" ON core.shops;
--- Eliminamos la anterior
 
 CREATE POLICY "All active employees can read shops" ON core.shops FOR
 SELECT TO authenticated USING (
@@ -519,7 +517,6 @@ WITH
     );
 
 -- Lectura de Clientes: Permite leer registros si son clientes activos (SOLO para empleados NO-Managers)
-DROP POLICY "Allow read if is an active customer" ON core.persons;
 
 CREATE POLICY "Non-Managers can read active customer persons" ON core.persons FOR
 SELECT TO authenticated USING (
@@ -558,9 +555,7 @@ WITH
     );
 
 -- SALES.CUSTOMERS (Gestión de Clientes)
--- 🔥 REFINADO: Solo roles de creación/administración pueden gestionar clientes, no todos los empleados.
-DROP POLICY "All Employees can manage customers" ON sales.customers;
--- Eliminamos la anterior
+-- 🔥 REFINADO: Solo roles de creación/administración pueden gestionar clientes, no todos los empleados. -- Eliminamos la anterior
 
 CREATE POLICY "Creator/Managers can manage customers" ON sales.customers FOR ALL TO authenticated USING (
     auth_management.is_creator (auth.uid ())

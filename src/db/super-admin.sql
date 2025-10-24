@@ -10,7 +10,7 @@ DECLARE
     super_admin_role_id bigint;
     active_status_id smallint;
 BEGIN
-    -- 0. Obtener el ID del Local por defecto
+    -- 0. Obtener el ID del Local por defecto (Usando 'ORBEGOSO')
     SELECT id INTO default_shop_id FROM core.shops WHERE name = 'ORBEGOSO';
 
     IF default_shop_id IS NULL THEN
@@ -39,30 +39,29 @@ BEGIN
 
     -- 3. Crear/Actualizar el Perfil en CORE.PERSONS
     INSERT INTO core.persons (
-        id, email, first_name, last_name, person_type, created_by_id, updated_by_id -- ✅ updated_by_id añadido al INSERT
+        id, email, first_name, last_name, person_type, created_by_id, updated_by_id -- ✅ updated_by_id incluido
     )
     VALUES (
-        admin_uuid, admin_auth_email, 'Super', 'Admin', 'NATURAL', admin_uuid, admin_uuid -- ✅ updated_by_id añadido al VALUES
+        admin_uuid, admin_auth_email, 'Super', 'Admin', 'NATURAL', admin_uuid, admin_uuid -- ✅ updated_by_id incluido
     )
     ON CONFLICT (id) DO UPDATE 
     SET 
         updated_at = NOW(), 
-        updated_by_id = admin_uuid; -- ✅ updated_by_id añadido al UPDATE
-
+        updated_by_id = admin_uuid; -- ✅ updated_by_id incluido
     
     -- 4. Crear/Actualizar el registro de HR.EMPLOYEES
     INSERT INTO hr.employees (
-        id, shop_id, auth_user_id, status_id, hire_date, created_by_id, updated_by_id -- ✅ updated_by_id añadido al INSERT
+        id, shop_id, auth_user_id, auth_email, status_id, hire_date, created_by_id, updated_by_id -- ✅ updated_by_id incluido
     )
     VALUES (
-        admin_uuid, default_shop_id, admin_uuid, active_status_id, CURRENT_DATE, admin_uuid, admin_uuid -- ✅ updated_by_id añadido al VALUES
+        admin_uuid, default_shop_id, admin_uuid, admin_auth_email, active_status_id, CURRENT_DATE, admin_uuid, admin_uuid -- ✅ updated_by_id incluido
     )
     ON CONFLICT (id) DO UPDATE 
     SET 
         shop_id = EXCLUDED.shop_id, 
         status_id = EXCLUDED.status_id, 
         updated_at = NOW(),
-        updated_by_id = admin_uuid; -- ✅ updated_by_id añadido al UPDATE
+        updated_by_id = admin_uuid; -- ✅ updated_by_id incluido
     
     -- 5. Asignar el rol SUPER_ADMIN
     INSERT INTO hr.employee_roles (employee_id, role_id)

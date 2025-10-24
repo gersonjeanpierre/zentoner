@@ -3,7 +3,8 @@
     "errors": {
       "User already registered": "El usuario ya está registrado.",
       "Invalid email": "El correo electrónico no es válido.",
-      "Generic error": "Ha ocurrido un error inesperado."
+      "Generic error": "Ha ocurrido un error inesperado.",
+      "Error: DATA_MISSING: shopId is required to create an employee record.": "Falta el identificador de la tienda (shopId) para crear un registro de empleado."
     }
   }
 }
