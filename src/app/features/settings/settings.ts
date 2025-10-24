@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import SignUp from '@features/auth/sign-up/sign-up';
 
 @Component({
   selector: 'app-settings',
-  imports: [SignUp],
+  imports: [],
   templateUrl: './settings.html',
-  styleUrl: './settings.css'
 })
 export default class Settings {
+  private router = inject(Router)
 
+  toCreateUser() {
+    this.router.navigate(['configuracion/crear_usuario']);
+  }
 }

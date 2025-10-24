@@ -3,7 +3,7 @@
   <div class="drawer-content flex flex-col">
     <!-- Usuario y sesión activa -->
     <div class="sticky top-0 z-10 pr-[13px] pl-2 pt-3 pb-1 bg-base-200">
-      <div class="card card-compact bg-base-100 border border-base-200 shadow-sm">
+      <div class="card card-compact bg-base-100 border border-base-200 shadow-md">
         <div class="card-body py-2 px-4 flex flex-row items-center gap-4">
           <span class="card-title text-base font-semibold mb-0">Usuario</span>
           @if (user()) {
@@ -14,6 +14,15 @@
           @if (session()) {
             <span class="badge badge-success">{{ session() }}</span>
           }
+        </div>
+        <div class="breadcrumbs mb-2 px-4">
+          <ul>
+            @for (crumb of breadcrumbs(); track $index) {
+              <li>
+                <a routerLink="{{ crumb.routeLink }}">{{ crumb.label }}</a>
+              </li>
+            }
+          </ul>
         </div>
       </div>
     </div>
@@ -35,7 +44,7 @@
             @if (item.name !== 'Cerrar sesión') {
               <li>
                 <span
-                  class="group is-drawer-close:tooltip is-drawer-close:tooltip-right w-full is-drawer-close:flex is-drawer-close:justify-center transition-all duration-200 my-0.5 is-drawer-close:hover:bg-neutral is-drawer-close:text-primary-content rounded-full is-drawer-open:px-3 is-drawer-close:px-0 py-[12px] is-drawer-open:hover:bg-neutral"
+                  class="group is-drawer-close:tooltip is-drawer-close:tooltip-right w-full is-drawer-close:flex is-drawer-close:justify-center transition-all duration-200 my-0.5 is-drawer-close:hover:bg-neutral is-drawer-close:text-primary-content rounded-full is-drawer-open:px-3 is-drawer-close:px-0 py-3 is-drawer-open:hover:bg-neutral"
                   [attr.data-tip]="item.name"
                   [class.menu-active]="activeMenu() === item.name"
                   (click)="activeMenu.set(item.name)"

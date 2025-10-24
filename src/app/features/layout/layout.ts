@@ -1,8 +1,10 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
+import { Router, RouterLink, RouterOutlet, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@features/auth/auth-service';
 import { LogoLaserVeloz } from '@shared/components/logo-laser-veloz/logo-laser-veloz';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs';
+import { Breadcrumb } from '@core/layout/breadcrumb-model';
 
 @Component({
   selector: 'app-layout',
@@ -13,11 +15,56 @@ import { CommonModule } from '@angular/common';
 export default class Layout implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   user = signal<any | null>(null);
   session = signal<any | null>(null);
 
   activeMenu = signal('Dashboard');
   fontSize = signal('1.2em');
+
+  breadcrumbs = signal<Array<{ label: string; routeLink: string, icon: string }>>([]);
+
+  constructor() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.breadcrumbs.set(this.buildBreadcrumbs(this.route.root));
+    }
+    )
+  }
+
+  buildBreadcrumbs(
+    route: ActivatedRoute,
+    url: string = '',
+    breadcrumbs: Breadcrumb[] = []
+  ): Breadcrumb[] {
+    const children = route.children;
+
+    if (children.length === 0) {
+      return breadcrumbs;
+    }
+
+    for (const child of children) {
+      // Obtén el segmento de la URL actual
+      const segment = child.snapshot.url.map(s => s.path).join('/');
+      const nextUrl = segment ? `${url}/${segment}` : url;
+
+      // Obtén el label y el icono desde los datos de la ruta
+      const label = child.snapshot.data['breadcrumb'] || segment;
+      const icon = child.snapshot.data['icon'] || '';
+
+      // Si hay label, agrega el breadcrumb
+      if (label) {
+        breadcrumbs.push({ label, routeLink: nextUrl, icon });
+      }
+
+      // Recursividad para los hijos
+      return this.buildBreadcrumbs(child, nextUrl, breadcrumbs);
+    }
+
+    return breadcrumbs;
+  }
 
   menuItems = [
     {
