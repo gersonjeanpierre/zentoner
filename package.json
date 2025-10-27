@@ -13,9 +13,7 @@
       "dist/zentoner/**/*",
       "electron/main.js",
       "electron/preload.js",
-      "node_modules/**/*",
-      "!node_modules/@tailwindcss/oxide-*",
-      "!node_modules/@emnapi/**"
+      "node_modules/**/*"
     ],
     "directories": {
       "buildResources": "assets"
@@ -33,10 +31,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration production",
     "test": "ng test",
-    "electron": "ng build --base-href ./ && electron .",
-    "package": "ng build --base-href ./ && electron-builder",
-    "deploy:cf": "node generate-env.js && npm run build",
-    "build:electron:win": "node set-supabase-env.js && ng build --base-href ./ --configuration production && electron-builder"
+    "deploy:cf": "node generate-env.js && npm run build"
   },
   "prettier": {
     "printWidth": 100,
@@ -58,6 +53,7 @@
     "@angular/forms": "^20.3.7",
     "@angular/platform-browser": "^20.3.7",
     "@angular/router": "^20.3.7",
+    "@angular/service-worker": "^20.3.7",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@supabase/supabase-js": "^2.76.1",
@@ -74,13 +70,11 @@
     "@angular/build": "^20.3.7",
     "@angular/cli": "^20.3.7",
     "@angular/compiler-cli": "^20.3.7",
-    "@iconify/json": "^2.2.399",
+    "@iconify/json": "^2.2.400",
     "@iconify/tailwind4": "^1.0.6",
     "@types/humps": "^2.0.6",
     "@types/jasmine": "~5.1.12",
-    "daisyui": "^5.3.9",
-    "electron": "^38.4.0",
-    "electron-builder": "^26.0.12",
+    "daisyui": "^5.3.10",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
