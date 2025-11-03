@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@features/auth/auth-service';
 import { LogoLaserVeloz } from '@shared/components/logo-laser-veloz/logo-laser-veloz';
@@ -55,7 +55,7 @@ export default class Layout implements OnInit {
       const icon = child.snapshot.data['icon'] || '';
 
       // Si hay label, agrega el breadcrumb
-      if (label) {
+      if (label && (!breadcrumbs.length || breadcrumbs[breadcrumbs.length - 1].label !== label)) {
         breadcrumbs.push({ label, routeLink: nextUrl, icon });
       }
 
@@ -65,6 +65,11 @@ export default class Layout implements OnInit {
 
     return breadcrumbs;
   }
+
+  currentBreadcrumb = computed(() => {
+    const bcs = this.breadcrumbs();
+    return bcs.length ? bcs[bcs.length - 1] : null;
+  });
 
   menuItems = [
     {

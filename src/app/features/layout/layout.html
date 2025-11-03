@@ -19,6 +19,7 @@
           <ul>
             @for (crumb of breadcrumbs(); track $index) {
               <li>
+                <span class="{{ crumb.icon }} mr-1.5"></span>
                 <a routerLink="{{ crumb.routeLink }}">{{ crumb.label }}</a>
               </li>
             }
