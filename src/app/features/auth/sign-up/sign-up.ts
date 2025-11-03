@@ -6,17 +6,22 @@ import { AuthService } from '../auth-service';
 import { AlertModal } from '@shared/components/alert-modal/alert-modal';
 import { TranslateService } from '@ngx-translate/core';
 import { rolesUser } from '@shared/mockup';
+import { ShopService } from '@features/shops/shop-service';
+
+type RoleType = { name: string; label: string };
 
 @Component({
   selector: 'app-sign-up',
   imports: [LogoLaserVeloz, ReactiveFormsModule, AlertModal],
-  templateUrl: './sign-up.html'
+  templateUrl: './sign-up.html',
 })
 export default class SignUp {
-
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private translate = inject(TranslateService);
+  private shopService = inject(ShopService);
+
+  availableShops = signal<{ id: string; name: string }[]>([]);
 
   // Modal de alerta
   isLoading = signal(false);
@@ -25,7 +30,7 @@ export default class SignUp {
   alertTitle = signal('');
   showModal = signal(false);
   alertType = signal<'info' | 'warning' | 'error' | 'success'>('success');
-  availableRoles = signal(rolesUser);
+  availableRoles = signal(<RoleType[]>[]);
 
   signUpForm = this.fb.group<SignUpForm>({
     email: this.fb.control(null, [
@@ -49,8 +54,32 @@ export default class SignUp {
       Validators.minLength(2),
       Validators.maxLength(80),
     ]),
-    selectedRoles: this.fb.control([], Validators.required)
+    selectedRoles: this.fb.control([], Validators.required),
+    shopId: this.fb.control(null, Validators.required),
   });
+
+  async ngOnInit() {
+    this.loadShops();
+    this.setTranslateRoles();
+  }
+
+  async loadShops() {
+    this.isLoading.set(true);
+    try {
+      const result = await this.shopService.getShopDetails({ deletedAt: null });
+      this.availableShops.set(
+        (result.data ?? []).map((shop) => ({
+          id: shop.id,
+          name: shop.name,
+        })),
+      );
+    } catch (error) {
+      // Puedes mostrar un error si lo deseas
+      this.availableShops.set([]);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
 
   // 2. Gestionar el cambio en los Checkboxes
   onRoleChange(roleName: string, isChecked: boolean) {
@@ -60,7 +89,7 @@ export default class SignUp {
     if (isChecked) {
       currentRoles = [...currentRoles, roleName];
     } else {
-      currentRoles = currentRoles.filter(r => r !== roleName);
+      currentRoles = currentRoles.filter((r) => r !== roleName);
     }
 
     if (selectedRolesControl) selectedRolesControl.setValue(currentRoles);
@@ -72,51 +101,55 @@ export default class SignUp {
   async onSubmit() {
     if (this.signUpForm.invalid) {
       this.signUpForm.markAllAsTouched();
-      this.showAlert('Datos incompletos', 'Complete campos y seleccione al menos un rol.', 'warning');
+      this.showAlert(
+        'Datos incompletos',
+        'Complete campos y seleccione al menos un rol.',
+        'warning',
+      );
       return;
     }
 
     this.isLoading.set(true);
     const formValue = this.signUpForm.value;
 
-    // 🚨 Payload para la Edge Function
     const payload = {
       email: formValue.email ?? '',
       password: formValue.password ?? '',
       firstName: formValue.firstName ?? '',
       lastName: formValue.lastName ?? '',
       authEmail: formValue.email ?? '',
+      shopId: formValue.shopId ?? '',
       initialRoleNames: formValue.selectedRoles ?? [], // Array de roles
     };
 
+    console.log('Payload for registration:', payload);
+
     try {
-      // 🚨 Llamada al servicio que usa HttpClient y la Edge Function
+      // Edge Function para registro seguro
       const result = await this.authService.registerEmployeeSecurely(payload);
 
       this.showAlert(
         '¡Registro exitoso!',
         `La cuenta del empleado ha sido creada con éxito. ID: ${result.user_id}.`,
-        'success'
+        'success',
       );
       this.signUpForm.reset();
-      this.signUpForm.controls.selectedRoles?.setValue([]); // Limpiar selección
-
+      this.signUpForm.controls.selectedRoles?.setValue([]);
+      this.signUpForm.controls.shopId?.setValue('');
     } catch (error: any) {
       const errorMessage = error.message || 'GENERIC_SERVER_ERROR';
 
-      this.showAlert(
-        '¡Error al registrar!',
-        // Mejor manejo de errores: traducimos mensajes conocidos
-        this.getErrorTranslation(errorMessage),
-        'error'
-      );
-
+      this.showAlert('¡Error al registrar!', this.getErrorTranslation(errorMessage), 'error');
     } finally {
       this.isLoading.set(false);
     }
   }
 
-  private showAlert(title: string, message: string, type: 'info' | 'warning' | 'error' | 'success') {
+  private showAlert(
+    title: string,
+    message: string,
+    type: 'info' | 'warning' | 'error' | 'success',
+  ) {
     this.showModal.set(true);
     this.alertTitle.set(title);
     this.alertMessage.set(message);
@@ -125,6 +158,19 @@ export default class SignUp {
 
   private getErrorTranslation(message: string): string {
     // Busca la traducción exacta, si no existe usa el genérico
-    return this.translate.instant(`auth.errors.${message}`) || this.translate.instant('auth.errors.generic');
+    return (
+      this.translate.instant(`auth.errors.${message}`) ||
+      this.translate.instant('auth.errors.generic')
+    );
+  }
+
+  async setTranslateRoles() {
+    const translate = await Promise.all(
+      rolesUser.map(async (role) => {
+        const label = await this.translate.get(`auth.roles.${role.name}`).toPromise();
+        return { name: role.name, label }; // name: inglés, label: traducido
+      }),
+    );
+    this.availableRoles.set(translate);
   }
 }

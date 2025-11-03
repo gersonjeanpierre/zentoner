@@ -60,6 +60,20 @@
         />
       </label>
 
+      <!-- Tienda a asignar -->
+      <div class="form-control w-full mb-4">
+        <span class="label-text font-bold mb-2">Tienda a Asignar</span>
+        <select class="select select-bordered w-full" formControlName="shopId">
+          <option value="" disabled>Seleccione una tienda</option>
+          @for (shop of availableShops(); track shop.id) {
+            <option [value]="shop.id">{{ shop.name }}</option>
+          }
+        </select>
+        @if (signUpForm.controls.shopId?.invalid && signUpForm.controls.shopId?.touched) {
+          <span class="label-text-alt text-error mt-2">Debe seleccionar una tienda.</span>
+        }
+      </div>
+
       <!-- Roles a Asignar -->
       <div class="form-control w-full mt-2">
         <span class="label-text font-bold mb-2">Roles a Asignar</span>
@@ -81,7 +95,7 @@
                   class="checkbox checkbox-primary"
                   [checked]="(signUpForm.controls.selectedRoles?.value ?? [])?.includes(role.name)"
                 />
-                <span class="label-text">{{ role.name }}</span>
+                <span class="label-text">{{ role.label }}</span>
               </label>
             }
           }
