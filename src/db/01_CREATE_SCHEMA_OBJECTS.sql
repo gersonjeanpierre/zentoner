@@ -249,7 +249,6 @@ CREATE TABLE hr.employees (
     id uuid PRIMARY KEY REFERENCES core.persons (id),
     shop_id uuid REFERENCES core.shops (id) NOT NULL,
     employee_code TEXT UNIQUE,
-    auth_user_id uuid UNIQUE REFERENCES auth.users (id),
     auth_email TEXT UNIQUE,
     hire_date DATE,
     salary NUMERIC(12, 2),
@@ -646,5 +645,14 @@ VALUES (
         '019a1367-5dd3-79a4-a6cb-a3aa7a88612c',
         'ORBEGOSO',
         'JR. ORBEGOSO 243 PISO 1 STAND 243'
+    )
+ON CONFLICT (name) DO NOTHING;
+
+INSERT INTO
+    core.shops (id, name, address)
+VALUES (
+        '019a2cdf-56e9-7d92-8985-1256bfed4197',
+        'TIENDA TEST',
+        'AV. TEST 1234'
     )
 ON CONFLICT (name) DO NOTHING;
