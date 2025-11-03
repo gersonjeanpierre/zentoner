@@ -5,6 +5,16 @@
       "Invalid email": "El correo electrónico no es válido.",
       "Generic error": "Ha ocurrido un error inesperado.",
       "Error: DATA_MISSING: shopId is required to create an employee record.": "Falta el identificador de la tienda (shopId) para crear un registro de empleado."
+    },
+    "roles": {
+      "Manager": "Gerente",
+      "Employee": "Empleado",
+      "Designer": "Diseñador",
+      "Cashier": "Cajero",
+      "HR": "RRHH",
+      "Accountant": "Contador",
+      "Administrator": "Administrador",
+      "Developer": "Desarrollador"
     }
   }
 }
