@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CustomersService } from '../customers-service';
+import { CustomerService } from '../customer-service';
 import { CustomerView } from '@core/customer/customer-model';
 import { RouterModule } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './customers-list.css'
 })
 export default class CustomersList implements OnInit {
-  private readonly customersService: CustomersService = inject(CustomersService);
+  private readonly customersService: CustomerService = inject(CustomerService);
   customers = signal<CustomerView[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);

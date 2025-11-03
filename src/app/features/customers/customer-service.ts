@@ -5,7 +5,7 @@ import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
 @Injectable({ providedIn: 'root' })
-export class CustomersService {
+export class CustomerService {
   private supabase = inject(SupabaseService).supabaseClient;
 
   /**

@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, FormArray } from '@angular/forms';
-import { CustomersService } from '../customers-service';
+import { CustomerService } from '../customer-service';
 import { CustomerPayload } from '@core/customer/customer-model';
 import { v7 as uuidv7 } from 'uuid';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export default class CustomersCreate {
   private readonly fb = inject(FormBuilder);
-  private readonly customersService = inject(CustomersService);
+  private readonly customersService = inject(CustomerService);
   private readonly router = inject(Router);
 
   readonly loading = signal(false);
