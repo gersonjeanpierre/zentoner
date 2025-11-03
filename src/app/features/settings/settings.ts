@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import SignUp from '@features/auth/sign-up/sign-up';
 
 @Component({
   selector: 'app-settings',
@@ -12,5 +11,9 @@ export default class Settings {
 
   toCreateUser() {
     this.router.navigate(['configuracion/crear_usuario']);
+  }
+
+  toShops() {
+    this.router.navigate(['configuracion/tiendas']);
   }
 }
