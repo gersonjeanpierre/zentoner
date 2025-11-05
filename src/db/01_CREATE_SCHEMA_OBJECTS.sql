@@ -324,6 +324,17 @@ WHERE
     c.deleted_at IS NULL
     AND p.deleted_at IS NULL;
 
+----
+-- INDEXES PARA OPTIMIZACIÓN DE CONSULTAS
+----
+-- eliminar si existe el index
+DROP INDEX IF EXISTS core.idx_core_persons_deleted_at;
+CREATE INDEX IF NOT EXISTS idx_core_persons_deleted_at ON core.persons (deleted_at);
+
+DROP INDEX IF EXISTS sales.idx_sales_customers_id_deleted_at;
+CREATE INDEX IF NOT EXISTS idx_sales_customers_id_deleted_at ON sales.customers (id, deleted_at);
+
+
 -- ######################################################################
 -- # 5. FUNCIONES DE UTILIDAD Y AUTENTICACIÓN (INCLUYENDO AUDITORÍA)
 -- ######################################################################
@@ -487,81 +498,135 @@ ALTER VIEW sales.active_customers SET (security_barrier = true);
 -- POLÍTICAS REFINADAS
 -- CORE.SHOPS: Se permite a todos los empleados ver los locales (metadato).
 
-CREATE POLICY "All active employees can read shops" ON core.shops FOR
-SELECT TO authenticated USING (
-        auth_management.is_employee (auth.uid ())
-        AND deleted_at IS NULL
-    );
+
+DROP POLICY IF EXISTS "hr_employees_select_consolidated" ON hr.employees;
+CREATE POLICY "hr_employees_select_consolidated" ON hr.employees
+  FOR SELECT
+  TO authenticated
+  USING (
+    id = ((SELECT auth.uid())::uuid)
+    OR auth_management.can_manage_hr(((SELECT auth.uid())::uuid))
+  );
+
+DROP POLICY IF EXISTS "hr_employees_insert_managers" ON hr.employees;
+CREATE POLICY "hr_employees_insert_managers" ON hr.employees
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    auth_management.can_manage_hr(((SELECT auth.uid())::uuid))
+  );
+
+DROP POLICY IF EXISTS "hr_employees_update_managers" ON hr.employees;
+CREATE POLICY "hr_employees_update_managers" ON hr.employees
+  FOR UPDATE
+  TO authenticated
+  USING (
+    auth_management.can_manage_hr(((SELECT auth.uid())::uuid))
+  )
+  WITH CHECK (
+    auth_management.can_manage_hr(((SELECT auth.uid())::uuid))
+  );
+
+
+DROP POLICY IF EXISTS "authenticated_persons_select_consolidated" ON core.persons;
+CREATE POLICY "authenticated_persons_select_consolidated" ON core.persons
+  FOR SELECT
+  TO authenticated
+  USING (
+    -- 1) Empleado propietario: el id del person = auth.uid()
+    ((SELECT auth.uid())::uuid = id AND deleted_at IS NULL)
+
+    OR
+
+    -- 2) Non-managers: persona activa y es customer
+    (
+      deleted_at IS NULL
+      AND NOT auth_management.is_universal_manager((SELECT auth.uid())::uuid)
+      AND EXISTS (
+        SELECT 1
+        FROM sales.customers sc
+        WHERE sc.id = core.persons.id
+          AND sc.deleted_at IS NULL
+      )
+    )
+
+    OR
+
+    -- 3) Managers universales
+    (
+      auth_management.is_universal_manager((SELECT auth.uid())::uuid)
+    )
+  );
+
+
+DROP POLICY IF EXISTS "All active employees can read shops" ON core.shops;
+CREATE POLICY "All active employees can read shops" ON core.shops
+FOR SELECT TO authenticated
+USING (
+  auth_management.is_employee((SELECT auth.uid())::uuid)
+  AND deleted_at IS NULL
+);
 
 -- CORE.PERSONS (Datos Personales)
 
--- 🔥 AÑADIDO: Managers tienen control total (Universal) sobre todos los registros 'persons'.
-CREATE POLICY "Universal Managers full access to persons" ON core.persons FOR ALL TO authenticated USING (
-    auth_management.is_universal_manager (auth.uid ())
-)
-WITH
-    CHECK (
-        auth_management.is_universal_manager (auth.uid ())
-    );
+-- INSERT COMBINADO: Permite a los empleados insertarse a sí mismos o a Managers crear otros registros
+DROP POLICY IF EXISTS "Authenticated insert persons (combined)" ON core.persons;
+CREATE POLICY "Authenticated insert persons (combined)" ON core.persons
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    (
+      (SELECT auth.uid()) = id
+      AND deleted_at IS NULL
+    )
+    OR
+    (
+      auth_management.is_universal_manager((SELECT auth.uid()))
+    )
+  );
 
--- Self-Update: Permite al empleado editar su propio registro (Mantenemos, no aplica el filtro Manager aquí)
-CREATE POLICY "Employee can view and update their own person record" ON core.persons FOR ALL TO authenticated USING (
-    auth.uid () = id
-    AND deleted_at IS NULL
-)
-WITH
-    CHECK (
-        auth.uid () = id
-        AND deleted_at IS NULL
-    );
 
--- Lectura de Clientes: Permite leer registros si son clientes activos (SOLO para empleados NO-Managers)
+CREATE POLICY "authenticated_persons_update_consolidated" ON core.persons
+  FOR UPDATE
+  TO authenticated
+  USING (
+    (
+      -- Empleado propietario: puede actualizar su propio registro sólo si no está eliminado
+      ((SELECT auth.uid())::uuid = id)
+      AND deleted_at IS NULL
+    )
+    OR
+    (
+      -- Managers universales: pueden actualizar cualquier fila
+      auth_management.is_universal_manager((SELECT auth.uid())::uuid)
+    )
+  )
+  WITH CHECK (
+    (
+      -- Al insertar/actualizar: permitir cambios si el actor es el propietario (y fila no eliminada)
+      ((SELECT auth.uid())::uuid = id)
+      AND deleted_at IS NULL
+    )
+    OR
+    (
+      -- O si el actor es manager universal
+      auth_management.is_universal_manager((SELECT auth.uid())::uuid)
+    )
+  );
 
-CREATE POLICY "Non-Managers can read active customer persons" ON core.persons FOR
-SELECT TO authenticated USING (
-        deleted_at IS NULL
-        -- Solo aplica si NO es un Manager Universal, para no duplicar permisos
-        AND NOT auth_management.is_universal_manager (auth.uid ())
-        AND EXISTS (
-            SELECT 1
-            FROM sales.customers sc
-            WHERE
-                sc.id = core.persons.id
-                AND sc.deleted_at IS NULL
-        )
-    );
 
 -- HR.EMPLOYEES (Registros Laborales)
 -- Las políticas de HR ya son universales si usas can_manage_hr. No necesitan shop_id.
 
--- ⚠️ RLS de Lectura: Empleado solo se ve a sí mismo (Sin cambios)
-CREATE POLICY "Employee can view their own record only" ON hr.employees FOR
-SELECT TO authenticated USING (id = auth.uid ());
-
--- ⚠️ RLS de Lectura: HR Managers pueden ver todos los registros (Sin cambios - acceso universal)
-CREATE POLICY "HR Managers can view all employee records" ON hr.employees FOR
-SELECT TO authenticated USING (
-        auth_management.can_manage_hr (auth.uid ())
-    );
-
--- ⚠️ RLS de Escritura: HR Managers tienen control total (Sin cambios - acceso universal)
-CREATE POLICY "HR Managers have full write access" ON hr.employees FOR ALL TO authenticated USING (
-    auth_management.can_manage_hr (auth.uid ())
-)
-WITH
-    CHECK (
-        auth_management.can_manage_hr (auth.uid ())
-    );
-
 -- SALES.CUSTOMERS (Gestión de Clientes)
 -- 🔥 REFINADO: Solo roles de creación/administración pueden gestionar clientes, no todos los empleados. -- Eliminamos la anterior
-
+DROP POLICY IF EXISTS "Creator/Managers can manage customers" ON sales.customers;
 CREATE POLICY "Creator/Managers can manage customers" ON sales.customers FOR ALL TO authenticated USING (
-    auth_management.is_creator (auth.uid ())
+    auth_management.is_creator ((SELECT auth.uid())::uuid)
 )
 WITH
     CHECK (
-        auth_management.is_creator (auth.uid ())
+        auth_management.is_creator ((SELECT auth.uid())::uuid)
     );
 
 -- ######################################################################
