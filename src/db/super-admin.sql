@@ -51,10 +51,10 @@ BEGIN
     
     -- 4. Crear/Actualizar el registro de HR.EMPLOYEES
     INSERT INTO hr.employees (
-        id, shop_id, auth_user_id, auth_email, status_id, hire_date, created_by_id, updated_by_id -- ✅ updated_by_id incluido
+        id, shop_id, auth_email, status_id, hire_date, created_by_id, updated_by_id -- ✅ updated_by_id incluido
     )
     VALUES (
-        admin_uuid, default_shop_id, admin_uuid, admin_auth_email, active_status_id, CURRENT_DATE, admin_uuid, admin_uuid -- ✅ updated_by_id incluido
+        admin_uuid, default_shop_id, admin_auth_email, active_status_id, CURRENT_DATE, admin_uuid, admin_uuid -- ✅ updated_by_id incluido
     )
     ON CONFLICT (id) DO UPDATE 
     SET 
