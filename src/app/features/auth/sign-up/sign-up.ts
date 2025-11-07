@@ -73,6 +73,7 @@ export default class SignUp {
           name: shop.name,
         })),
       );
+      // console.error('Error loading shops:', result.error);
     } catch (error) {
       // Puedes mostrar un error si lo deseas
       this.availableShops.set([]);
@@ -121,8 +122,6 @@ export default class SignUp {
       shopId: formValue.shopId ?? '',
       initialRoleNames: formValue.selectedRoles ?? [], // Array de roles
     };
-
-    console.log('Payload for registration:', payload);
 
     try {
       // Edge Function para registro seguro
