@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { CustomerService } from '../customer-service';
 import { CustomerView } from '@core/customer/customer-model';
 import { RouterModule } from '@angular/router';
+import camelCaseKeys from 'camelcase-keys';
 
 @Component({
   selector: 'app-customers-list',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './customers-list.html',
-  styleUrl: './customers-list.css'
+  styleUrl: './customers-list.css',
 })
 export default class CustomersList implements OnInit {
   private readonly customersService: CustomerService = inject(CustomerService);
@@ -25,14 +26,17 @@ export default class CustomersList implements OnInit {
 
   filteredCustomers = computed(() => {
     let list = this.customers();
-    if (this.filter() === 'active') list = list.filter(c => c.isActive);
-    if (this.filter() === 'inactive') list = list.filter(c => !c.isActive);
+    // if (this.filter() === 'active') list = list.filter((c) => c.isActive);
+    // if (this.filter() === 'inactive') list = list.filter((c) => !c.isActive);
     const q = this.search().toLowerCase();
     if (q) {
-      list = list.filter(c =>
-        `${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase().includes(q) ||
-        (c.phone?.toLowerCase().includes(q) || '') ||
-        (c.email?.toLowerCase().includes(q) || '')
+      list = list.filter(
+        (c) =>
+          `${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase().includes(q) ||
+          c.phone?.toLowerCase().includes(q) ||
+          '' ||
+          c.email?.toLowerCase().includes(q) ||
+          '',
       );
     }
     return list;
@@ -46,9 +50,10 @@ export default class CustomersList implements OnInit {
   async ngOnInit() {
     this.loading.set(true);
     try {
-      const data = await this.customersService.getActiveCustomers();
-      this.customers.set(data || []);
-      console.log('Clientes cargados:', data);
+      const data = await this.customersService.viewCustomers();
+      const camelCaseData = camelCaseKeys(data, { deep: true }) as CustomerView[];
+
+      this.customers.set(camelCaseData);
       this.error.set(null);
     } catch (e: any) {
       this.error.set(e.message || 'Error al cargar clientes');
@@ -59,7 +64,7 @@ export default class CustomersList implements OnInit {
     if (!id) return;
     if (!confirm('¿Seguro que deseas eliminar este cliente?')) return;
     try {
-      await this.customersService.softDelete(id);
+      // await this.customersService.softDelete(id);
       this.deleteSuccess.set(true);
       this.ngOnInit();
       setTimeout(() => this.deleteSuccess.set(false), 800);

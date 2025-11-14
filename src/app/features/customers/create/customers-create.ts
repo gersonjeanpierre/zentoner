@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './customers-create.html',
-  styleUrl: './customers-create.css'
+  styleUrl: './customers-create.css',
 })
 export default class CustomersCreate {
   private readonly fb = inject(FormBuilder);
@@ -27,14 +27,14 @@ export default class CustomersCreate {
     lastName: [''],
     legalName: [''],
     email: ['', [Validators.email]],
-    phone: ['', [Validators.required]],
+    phone: ['+51', [Validators.required]],
     dni: [''],
     ruc: [''],
     ce: [''],
     personType: [''],
     customerCode: [''],
     customerType: [''],
-    notes: this.fb.array<FormGroup>([])
+    notes: this.fb.array<FormGroup>([]),
   });
 
   get notesArray() {
@@ -75,13 +75,17 @@ export default class CustomersCreate {
       dni: raw.dni || null,
       ruc: raw.ruc || null,
       ce: raw.ce || null,
-      personType: (raw.personType || '').toLowerCase() as 'juridico' | 'natural',
+      personType: (raw.personType || '') as 'JURIDICA' | 'NATURAL',
       customerCode: raw.customerCode || null,
-      customerType: (raw.customerType || '').toLowerCase() as 'nuevo' | 'frecuente' | 'imprentero_nuevo' | 'imprentero_frecuente',
-      notes: this.serializeNotes()
+      customerType: (raw.customerType || '') as
+        | 'NUEVO'
+        | 'FRECUENTE'
+        | 'IMPRENTERO_NUEVO'
+        | 'IMPRENTERO_FRECUENTE',
+      notes: this.serializeNotes(),
     };
     try {
-      await this.customersService.upsertCustomer(customer);
+      await this.customersService.createCustomer(customer);
       this.success.set(true);
       setTimeout(() => this.router.navigate(['/clientes']), 800);
     } catch (e: any) {

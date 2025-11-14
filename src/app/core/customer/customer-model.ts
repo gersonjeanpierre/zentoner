@@ -10,11 +10,11 @@ export interface CustomerPayload {
   dni: string | null;
   ruc: string | null;
   ce: string | null;
-  personType: 'juridico' | 'natural';
+  personType: 'JURIDICA' | 'NATURAL';
 
   // Datos de la tabla 'customers'
   customerCode: string | null;
-  customerType: 'nuevo' | 'frecuente' | 'imprentero_nuevo' | 'imprentero_frecuente';
+  customerType: 'NUEVO' | 'FRECUENTE' | 'IMPRENTERO_NUEVO' | 'IMPRENTERO_FRECUENTE';
   notes: Record<string, string> | null;
 }
 
@@ -29,7 +29,7 @@ export interface CustomerView {
   dni: string | null;
   ruc: string | null;
   ce: string | null;
-  personType: 'juridico' | 'natural';
+  personType: 'JURIDICA' | 'NATURAL';
 
   // --- Campos de Customers ---
   customerCode: string | null;
@@ -40,4 +40,9 @@ export interface CustomerView {
   // --- Campos de Auditoría y Estado ---
   isActive: boolean; // El estado lógico del customer (aunque la vista ya filtra por TRUE)
   createdBy: string | null; // UUID del empleado que lo creó
+}
+
+export interface ReturnListCustomers {
+  data?: CustomerView[];
+  error?: any;
 }
