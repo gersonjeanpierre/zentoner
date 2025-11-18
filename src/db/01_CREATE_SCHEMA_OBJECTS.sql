@@ -271,7 +271,9 @@ SELECT c.id,
   c.notes,
   c.created_by_id,
   p.deleted_at as person_deleted_at,
-  c.deleted_at as customer_deleted_at
+  p.updated_at as person_updated_at,
+  c.deleted_at as customer_deleted_at,
+  c.updated_at as customer_updated_at
 FROM sales.customers c
   JOIN core.persons p ON c.id = p.id;
 

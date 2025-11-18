@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": {
+  "compilerOptions": { //ignore this line
     "outDir": "./out-tsc/app",
     "types": []
   },

@@ -24,7 +24,7 @@ export interface CustomerView {
   firstName: string | null;
   lastName: string | null;
   legalName: string | null;
-  email: string | null; // Email personal/contacto
+  email: string | null;
   phone: string | null;
   dni: string | null;
   ruc: string | null;
@@ -33,13 +33,15 @@ export interface CustomerView {
 
   // --- Campos de Customers ---
   customerCode: string | null;
-  customerType: string; // 'nuevo', 'frecuente', etc.
-  notes: string | null; // NOTA: Si lo recuperas como JSONB, usa 'any' o 'NoteEntry[]'.
-  // Si la vista lo transforma a TEXT/STRING, usa 'string | null'.
+  customerTypeCode: string; // NUEVO, FRECUENTE, IMPRENTERO_NUEVO, IMPRENTERO_FRECUENTE
+  notes: any; // JSONB
+  createdById: string | null;
 
-  // --- Campos de Auditoría y Estado ---
-  isActive: boolean; // El estado lógico del customer (aunque la vista ya filtra por TRUE)
-  createdBy: string | null; // UUID del empleado que lo creó
+  // --- Campos de Auditoría ---
+  personDeletedAt: string | null;
+  personUpdatedAt: string | null;
+  customerDeletedAt: string | null;
+  customerUpdatedAt: string | null;
 }
 
 export interface ReturnListCustomers {
