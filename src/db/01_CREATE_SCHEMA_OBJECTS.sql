@@ -535,6 +535,96 @@ VALUES (
   );
 END;
 $$;
+-- RPC: Función para actualizar cliente
+CREATE OR REPLACE FUNCTION sales.update_customer(
+    p_customer_id uuid,
+    p_first_name TEXT DEFAULT NULL,
+    p_last_name TEXT DEFAULT NULL,
+    p_legal_name TEXT DEFAULT NULL,
+    p_email TEXT DEFAULT NULL,
+    p_phone TEXT DEFAULT NULL,
+    p_dni TEXT DEFAULT NULL,
+    p_ruc TEXT DEFAULT NULL,
+    p_ce TEXT DEFAULT NULL,
+    p_customer_code TEXT DEFAULT NULL,
+    p_customer_type_code TEXT DEFAULT NULL,
+    p_notes jsonb DEFAULT NULL
+  ) RETURNS VOID LANGUAGE plpgsql SECURITY DEFINER AS $$
+DECLARE v_user_id uuid := auth.uid();
+BEGIN -- Validacion: no se puede tener ambos dni y ce
+IF p_dni IS NOT NULL
+AND p_ce IS NOT NULL THEN RAISE EXCEPTION 'DATA_VALIDATION_ERROR: No se puede proporcionar ambos DNI y CE al mismo tiempo.';
+END IF;
+-- verificar si esta autenticado
+IF v_user_id IS NULL THEN RAISE EXCEPTION 'AUTHENTICATION_ERROR: Usuario no autenticado.';
+END IF;
+-- Verificar permisos: solo empleados pueden actualizar
+IF NOT auth_management.is_employee(v_user_id) THEN RAISE EXCEPTION 'PERMISSION_DENIED: Only active employees can manage customers.';
+END IF;
+-- Actualizar core.persons
+UPDATE core.persons
+SET first_name = COALESCE(p_first_name, first_name),
+  last_name = COALESCE(p_last_name, last_name),
+  legal_name = COALESCE(p_legal_name, legal_name),
+  email = COALESCE(p_email, email),
+  phone = COALESCE(p_phone, phone),
+  dni = COALESCE(p_dni, dni),
+  ruc = COALESCE(p_ruc, ruc),
+  ce = COALESCE(p_ce, ce),
+  updated_by_id = v_user_id,
+  updated_at = NOW()
+WHERE id = p_customer_id;
+-- Actualizar sales.customers
+UPDATE sales.customers
+SET customer_code = COALESCE(p_customer_code, customer_code),
+  customer_type_code = COALESCE(p_customer_type_code, customer_type_code),
+  notes = COALESCE(p_notes, notes),
+  updated_by_id = v_user_id,
+  updated_at = NOW()
+WHERE id = p_customer_id;
+-- Auditoría
+INSERT INTO core.audit_logs (
+    action,
+    actor_id,
+    target_table,
+    target_id,
+    status,
+    payload
+  )
+VALUES (
+    'update_customer',
+    v_user_id,
+    'sales.customers',
+    p_customer_id,
+    'SUCCESS',
+    jsonb_build_object(
+      'customer_code',
+      p_customer_code,
+      'customer_type_code',
+      p_customer_type_code
+    )
+  );
+EXCEPTION
+WHEN OTHERS THEN -- Auditoría de fallo
+INSERT INTO core.audit_logs (
+    action,
+    actor_id,
+    target_table,
+    target_id,
+    status,
+    payload
+  )
+VALUES (
+    'update_customer',
+    v_user_id,
+    'sales.customers',
+    p_customer_id,
+    'FAILURE',
+    jsonb_build_object('error_message', SQLERRM)
+  );
+RAISE;
+END;
+$$;
 -- ######################################################################
 -- # 7. SEGURIDAD: ROW LEVEL SECURITY (RLS) - REFINADO POR ROLES GESTORES
 -- ######################################################################

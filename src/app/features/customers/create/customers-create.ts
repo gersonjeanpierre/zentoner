@@ -5,6 +5,7 @@ import { CustomerPayload } from '@core/customer/customer-model';
 import { v7 as uuidv7 } from 'uuid';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { generateCustomerCode } from '../utils/customer-utils';
 
 @Component({
   selector: 'app-customers-create',
@@ -56,6 +57,14 @@ export default class CustomersCreate {
       if (key && key.trim()) notesObj[key.trim()] = value;
     }
     return Object.keys(notesObj).length ? notesObj : null;
+  }
+
+  generateCode() {
+    const { firstName, lastName } = this.form.value;
+    if (!firstName || !lastName) return;
+    
+    const code = generateCustomerCode(firstName, lastName);
+    this.form.patchValue({ customerCode: code });
   }
 
   async onSubmit(): Promise<void> {

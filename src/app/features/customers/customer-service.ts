@@ -11,6 +11,21 @@ export interface GetCustomersParams {
   pageSize?: number;
 }
 
+export interface UpdateCustomerPayload {
+  personType?: 'JURIDICA' | 'NATURAL';
+  firstName?: string;
+  lastName?: string;
+  legalName?: string;
+  email?: string;
+  phone?: string;
+  dni?: string;
+  ruc?: string;
+  ce?: string;
+  customerCode?: string;
+  customerType?: 'NUEVO' | 'FRECUENTE' | 'IMPRENTERO_NUEVO' | 'IMPRENTERO_FRECUENTE';
+  notes?: any;
+}
+
 export interface GetCustomersResponse {
   data: CustomerView[];
   count: number;
@@ -105,11 +120,47 @@ export class CustomerService {
     };
   }
 
-  async softDeleteCustomer(customerId: string): Promise<void> {
-    const { error } = await this.supabase.schema('sales').rpc('soft_delete_customer', {
+  async getCustomerById(customerId: string): Promise<CustomerView> {
+    const { data, error } = await this.supabase
+      .schema('sales')
+      .from('active_customers')
+      .select('*')
+      .eq('id', customerId)
+      .is('customer_deleted_at', null)
+      .is('person_deleted_at', null)
+      .single();
+
+    if (error) throw error;
+    if (!data) throw new Error('Cliente no encontrado');
+
+    return data as CustomerView;
+  }
+
+  async updateCustomer(customerId: string, payload: UpdateCustomerPayload): Promise<CustomerView> {
+    if (payload.dni && payload.ce) {
+      throw new Error("No se puede tener ambos campos 'dni' y 'ce' al mismo tiempo.");
+    }
+
+    const { error } = await this.supabase.schema('sales').rpc('update_customer', {
       p_customer_id: customerId,
+      p_first_name: payload.firstName,
+      p_last_name: payload.lastName,
+      p_legal_name: payload.legalName,
+      p_email: payload.email,
+      p_phone: payload.phone,
+      p_dni: payload.dni,
+      p_ruc: payload.ruc,
+      p_ce: payload.ce,
+      p_customer_code: payload.customerCode,
+      p_customer_type_code: payload.customerType,
+      p_notes: payload.notes,
     });
 
     if (error) throw error;
+
+    // Return the updated customer
+    return this.getCustomerById(customerId);
   }
+
+  async softDeleteCustomer(customerId: string): Promise<void> {}
 }

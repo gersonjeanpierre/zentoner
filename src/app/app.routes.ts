@@ -28,7 +28,13 @@ export const routes: Routes = [
             path: 'create',
             loadComponent: () => import('./features/customers/create/customers-create'),
           },
-          // { path: 'edit/:id', loadComponent: () => import('./features/customers/edit/customers-edit') },
+          {
+            path: 'edit/:id',
+            loadComponent: () =>
+              import('./features/customers/edit/customers-edit').then(
+                (m) => m.CustomersEditComponent,
+              ),
+          },
         ],
       },
       {
@@ -53,7 +59,7 @@ export const routes: Routes = [
             path: 'tiendas',
             loadComponent: () => import('@features/shops/shops'),
             data: { breadcrumb: 'Tiendas', icon: 'icon-[fa7-solid--store]' },
-          }
+          },
         ],
       },
       {
