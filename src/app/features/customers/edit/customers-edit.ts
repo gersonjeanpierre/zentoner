@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, effect, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CustomerService } from '../customer-service';
 import { CustomerView } from '../../../core/customer/customer-model';
@@ -25,7 +25,7 @@ interface CustomerFormModel {
 @Component({
   selector: 'app-customers-edit',
   standalone: true,
-  imports: [CommonModule, RouterModule, AlertModal, Field],
+  imports: [RouterModule, AlertModal, Field],
   templateUrl: './customers-edit.html',
   styleUrls: ['./customers-edit.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

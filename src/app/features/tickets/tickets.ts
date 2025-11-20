@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TicketData, TicketItem } from '@core/tickets';
 import { TicketPreview } from './ticket-preview/ticket-preview';
@@ -11,7 +11,7 @@ import { itemSizes, itemMachines, itemTypes } from '@shared/mockup';
 
 @Component({
   selector: 'app-tickets',
-  imports: [CommonModule, FormsModule, TicketPreview, ModalSearch],
+  imports: [FormsModule, TicketPreview, ModalSearch],
   templateUrl: './tickets.html'
 })
 export default class Tickets {

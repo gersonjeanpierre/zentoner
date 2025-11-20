@@ -2,13 +2,13 @@ import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@features/auth/auth-service';
 import { LogoLaserVeloz } from '@shared/components/logo-laser-veloz/logo-laser-veloz';
-import { CommonModule } from '@angular/common';
+
 import { filter } from 'rxjs';
 import { Breadcrumb } from '@core/layout/breadcrumb-model';
 
 @Component({
   selector: 'app-layout',
-  imports: [LogoLaserVeloz, RouterLink, RouterOutlet, CommonModule, RouterOutlet],
+  imports: [LogoLaserVeloz, RouterLink, RouterOutlet, RouterOutlet],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
 })

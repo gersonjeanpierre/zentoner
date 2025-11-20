@@ -4,13 +4,13 @@ import { CustomerService } from '../customer-service';
 import { CustomerPayload } from '@core/customer/customer-model';
 import { v7 as uuidv7 } from 'uuid';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { generateCustomerCode } from '../utils/customer-utils';
 
 @Component({
   selector: 'app-customers-create',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './customers-create.html',
   styleUrl: './customers-create.css',
 })
