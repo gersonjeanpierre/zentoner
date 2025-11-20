@@ -10,3 +10,5 @@ bun add -D daisyui@latest;
 bun add --dev --exact prettier;
 bun add @supabase/supabase-js;
 ```
+
+The learning in development time is over, now a new project will be created with Angular 21 and many new concepts will be well defined and applied from the MitoCode Angular AI Expert course.
