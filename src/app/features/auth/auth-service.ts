@@ -75,13 +75,4 @@ export class AuthService {
     return this.authSupabaseClient.auth.getSession();
   }
 
-  async isAuthManagementAvailable() {
-    console.log(
-      ' Get USer',
-      await this.authSupabaseClient.auth.getUser().then((u) => u.data.user?.id || ''),
-    );
-    return this.authSupabaseClient.schema('auth_management').rpc('is_universal_manager', {
-      user_id: await this.authSupabaseClient.auth.getUser().then((u) => u.data.user?.id || ''),
-    });
-  }
 }

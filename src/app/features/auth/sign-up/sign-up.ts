@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { LogoLaserVeloz } from '../../../shared/components/logo-laser-veloz/logo-laser-veloz';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SignUpForm } from '@core/auth/sign-up-model';
@@ -14,6 +14,7 @@ type RoleType = { name: string; label: string };
   selector: 'app-sign-up',
   imports: [LogoLaserVeloz, ReactiveFormsModule, AlertModal],
   templateUrl: './sign-up.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class SignUp {
   private fb = inject(FormBuilder);
@@ -25,12 +26,11 @@ export default class SignUp {
 
   // Modal de alerta
   isLoading = signal(false);
-  showAlertModal = signal(false);
   alertMessage = signal('');
   alertTitle = signal('');
   showModal = signal(false);
   alertType = signal<'info' | 'warning' | 'error' | 'success'>('success');
-  availableRoles = signal(<RoleType[]>[]);
+  availableRoles = signal<RoleType[]>([]);
 
   signUpForm = this.fb.group<SignUpForm>({
     email: this.fb.control(null, [
@@ -73,7 +73,6 @@ export default class SignUp {
           name: shop.name,
         })),
       );
-      // console.error('Error loading shops:', result.error);
     } catch (error) {
       // Puedes mostrar un error si lo deseas
       this.availableShops.set([]);
@@ -83,7 +82,8 @@ export default class SignUp {
   }
 
   // 2. Gestionar el cambio en los Checkboxes
-  onRoleChange(roleName: string, isChecked: boolean) {
+  onRoleChange(roleName: string, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
     const selectedRolesControl = this.signUpForm.controls.selectedRoles;
     let currentRoles = selectedRolesControl?.value || [];
 
@@ -126,7 +126,6 @@ export default class SignUp {
     try {
       // Edge Function para registro seguro
       const result = await this.authService.registerEmployeeSecurely(payload);
-
       this.showAlert(
         '¡Registro exitoso!',
         `La cuenta del empleado ha sido creada con éxito. ID: ${result.user_id}.`,
@@ -135,8 +134,8 @@ export default class SignUp {
       this.signUpForm.reset();
       this.signUpForm.controls.selectedRoles?.setValue([]);
       this.signUpForm.controls.shopId?.setValue('');
-    } catch (error: any) {
-      const errorMessage = error.message || 'GENERIC_SERVER_ERROR';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'GENERIC_SERVER_ERROR';
 
       this.showAlert('¡Error al registrar!', this.getErrorTranslation(errorMessage), 'error');
     } finally {

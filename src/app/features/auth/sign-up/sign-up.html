@@ -91,7 +91,7 @@
                 <input
                   type="checkbox"
                   [value]="role.name"
-                  (change)="onRoleChange(role.name, $event.target.checked)"
+                  (change)="onRoleChange(role.name, $event)"
                   class="checkbox checkbox-primary"
                   [checked]="(signUpForm.controls.selectedRoles?.value ?? [])?.includes(role.name)"
                 />
