@@ -34,3 +34,9 @@ Sigue estos pasos para refactorizar el código actual y asegurar que cumpla con 
 6.  **Accesibilidad:**
     *   Verifica contrastes de color y atributos ARIA.
     *   Asegura que pase chequeos básicos de AXE/WCAG AA.
+
+7.  **Estilos y UI (Tailwind CSS + DaisyUI):**
+    *   **Prioriza clases de utilidad:** Usa Tailwind CSS para layout, espaciado, tipografía y colores. Evita escribir CSS personalizado en archivos `.css` o `.scss` a menos que sea estrictamente necesario.
+    *   **Usa componentes de DaisyUI:** Aprovecha las clases de componentes de DaisyUI (ej. `btn`, `input`, `card`, `modal`) para mantener una UI consistente y reducir la cantidad de clases de utilidad.
+    *   **Diseño Responsivo:** Usa los prefijos de breakpoints de Tailwind (ej. `md:`, `lg:`) para asegurar que la interfaz se adapte a diferentes tamaños de pantalla.
+    *   **Temas:** Utiliza las variables CSS de DaisyUI (ej. `bg-base-100`, `text-primary`) para asegurar compatibilidad con temas (light/dark mode).
